@@ -19,7 +19,7 @@ import rishabhPhoto from '../assets/Rishab.webp'
 import varunPhoto from '../assets/Varun.webp'
 
 const FOUNDERS = [
-  { name: 'Aditya Varma', role: 'Co-Founder', bio: ['Ex SVP Urban Company', 'IIT Bombay & INSEAD'], photo: adityaPhoto },
+  { name: 'Aditya Varma', role: 'Co-Founder', bio: ['Ex SVP Urban Company', 'IIT Bombay & INSEAD'], photo: adityaPhoto, focus: '38% center' },
   { name: 'Himanshu Arora', role: 'Co-Founder', bio: ['Ex SVP Travel Plus', 'IIM Ahmedabad'], photo: himanshuPhoto },
   { name: 'Nikhil Shanker', role: 'Co-Founder', bio: ['Ex VP Urban Company', 'IIM Lucknow'], photo: nikhilPhoto },
 ]
@@ -42,11 +42,11 @@ const ADVISORS = [
   { name: 'Varun Khaitan', title: 'COO & Co-Founder, Urban Company', photo: varunPhoto },
 ]
 
-function FounderCard({ name, role, bio, photo }) {
+function FounderCard({ name, role, bio, photo, focus = 'center' }) {
   return (
     <div className="flex flex-col items-center text-center">
       <div className="relative aspect-[4/5] w-full overflow-hidden rounded-2xl bg-[#e5e5e0]">
-        <img src={photo} alt={name} className="h-full w-full object-cover" />
+        <img src={photo} alt={name} className="h-full w-full object-cover" style={{ objectPosition: focus }} />
         <div className="absolute bottom-3 left-3 h-7 w-7 overflow-hidden rounded-md">
           <img src={linkedinIcon} alt="" className="h-full w-full" />
         </div>

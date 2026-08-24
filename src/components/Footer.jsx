@@ -13,7 +13,6 @@ const SOCIALS = [
 
 // Links without a `to` don't have a page yet, so they render as plain
 // (non-navigating) text rather than pointing somewhere broken.
-const PRODUCT_LINKS = [{ label: 'Send' }, { label: 'Spend' }, { label: 'Receive' }]
 const COMPANY_LINKS = [{ label: 'About', to: '/about' }, { label: 'Contact', to: '/contact' }]
 const SUPPORT_LINKS = [{ label: 'Privacy' }, { label: 'Terms' }]
 
@@ -66,7 +65,6 @@ export default function Footer() {
         </div>
 
         <div className="flex flex-wrap gap-12 md:gap-20">
-          <FooterColumn title="Product" items={PRODUCT_LINKS} />
           <FooterColumn title="Company" items={COMPANY_LINKS} />
           <FooterColumn title="Support" items={SUPPORT_LINKS} />
         </div>
