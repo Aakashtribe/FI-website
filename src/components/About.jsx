@@ -1,6 +1,6 @@
 import Nav from './Nav.jsx'
 import Footer from './Footer.jsx'
-import linkedinIcon from '../assets/icons/linkedin.svg'
+import linkedinIcon from '../assets/Linkedin.png'
 import adityaPhoto from '../assets/Aditya.webp'
 import himanshuPhoto from '../assets/Himanshu.webp'
 import nikhilPhoto from '../assets/Nikhil.webp'
@@ -19,9 +19,27 @@ import rishabhPhoto from '../assets/Rishab.webp'
 import varunPhoto from '../assets/Varun.webp'
 
 const FOUNDERS = [
-  { name: 'Aditya Varma', role: 'Co-Founder', bio: ['Ex SVP Urban Company', 'IIT Bombay & INSEAD'], photo: adityaPhoto },
-  { name: 'Himanshu Arora', role: 'Co-Founder', bio: ['Ex SVP Travel Plus', 'IIM Ahmedabad'], photo: himanshuPhoto },
-  { name: 'Nikhil Shanker', role: 'Co-Founder', bio: ['Ex VP Urban Company', 'IIM Lucknow'], photo: nikhilPhoto },
+  {
+    name: 'Aditya Varma',
+    role: 'Co-Founder',
+    bio: ['Ex SVP Urban Company', 'IIT Bombay & INSEAD'],
+    photo: adityaPhoto,
+    linkedin: 'https://www.linkedin.com/in/adityavarma71/',
+  },
+  {
+    name: 'Himanshu Arora',
+    role: 'Co-Founder',
+    bio: ['Ex SVP Travel Plus', 'IIM Ahmedabad'],
+    photo: himanshuPhoto,
+    linkedin: 'https://www.linkedin.com/in/himanshuarora9/',
+  },
+  {
+    name: 'Nikhil Shanker',
+    role: 'Co-Founder',
+    bio: ['Ex VP Urban Company', 'IIM Lucknow'],
+    photo: nikhilPhoto,
+    linkedin: 'https://www.linkedin.com/in/nikhilshanker/',
+  },
 ]
 
 const INVESTORS = [
@@ -42,14 +60,20 @@ const ADVISORS = [
   { name: 'Varun Khaitan', title: 'COO & Co-Founder, Urban Company', photo: varunPhoto },
 ]
 
-function FounderCard({ name, role, bio, photo }) {
+function FounderCard({ name, role, bio, photo, linkedin }) {
   return (
     <div className="flex flex-col items-center text-center">
       <div className="relative aspect-square w-full overflow-hidden rounded-2xl bg-[#e5e5e0]">
         <img src={photo} alt={name} className="h-full w-full object-cover" />
-        <div className="absolute bottom-3 left-3 h-7 w-7 overflow-hidden rounded-md">
+        <a
+          href={linkedin}
+          target="_blank"
+          rel="noreferrer"
+          aria-label={`${name} on LinkedIn`}
+          className="absolute bottom-3 left-3 h-7 w-7 overflow-hidden rounded-md transition-opacity hover:opacity-80"
+        >
           <img src={linkedinIcon} alt="" className="h-full w-full" />
-        </div>
+        </a>
       </div>
       <p className="mt-4 font-gsans text-base font-semibold text-[#1e1e1a]">{name}</p>
       <p className="font-gsans text-sm text-[#858679]">{role}</p>
@@ -67,7 +91,7 @@ function FounderCard({ name, role, bio, photo }) {
 export default function About() {
   return (
     <>
-      <section className="relative flex flex-col items-center bg-white px-6 pb-24 pt-40 text-center">
+      <section className="relative flex min-h-screen flex-col items-center justify-center bg-white px-6 pt-32 text-center">
         <Nav textColor="#1e1e1a" />
         <h1 className="max-w-3xl text-[clamp(2rem,4.4vw,3.75rem)] font-semibold leading-[1.1] tracking-tight text-[#1e1e1a]">
           tr/be is for builders
