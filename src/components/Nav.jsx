@@ -1,4 +1,5 @@
-import { motion, useMotionTemplate } from 'framer-motion'
+import { useRef, useState } from 'react'
+import { motion, useMotionTemplate, useScroll, useMotionValueEvent } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import tribeLogo from '../assets/Tribe logo.png'
 
@@ -10,8 +11,27 @@ const MotionLink = motion(Link)
 export default function Nav({ textColor = '#1e1e1a', logoInvert = 1 }) {
   const logoFilter = useMotionTemplate`invert(${logoInvert})`
 
+  // The whole bar slides away on scroll-down (out of the reader's way) and
+  // slides back the moment they scroll up, even a little — a direction
+  // change, not a distance threshold.
+  const [hidden, setHidden] = useState(false)
+  const lastY = useRef(0)
+  const { scrollY } = useScroll()
+
+  useMotionValueEvent(scrollY, 'change', (latest) => {
+    const diff = latest - lastY.current
+    if (Math.abs(diff) > 4) {
+      setHidden(diff > 0)
+      lastY.current = latest
+    }
+  })
+
   return (
-    <header className="absolute top-0 left-0 right-0 z-20 grid grid-cols-3 items-center px-8 py-8 md:px-12">
+    <motion.header
+      animate={{ y: hidden ? -120 : 0, opacity: hidden ? 0 : 1 }}
+      transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+      className="absolute top-0 left-0 right-0 z-20 grid grid-cols-3 items-center px-8 py-8 md:px-12"
+    >
       <MotionLink to="/" className="justify-self-start">
         <motion.img src={tribeLogo} alt="tr/be" className="h-12 w-auto" style={{ filter: logoFilter }} />
       </MotionLink>
@@ -42,6 +62,6 @@ export default function Nav({ textColor = '#1e1e1a', logoInvert = 1 }) {
       >
         Get the app
       </motion.a>
-    </header>
+    </motion.header>
   )
 }

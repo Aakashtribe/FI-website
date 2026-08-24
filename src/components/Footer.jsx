@@ -43,7 +43,7 @@ export default function Footer() {
       <div className="mx-auto flex max-w-6xl flex-col gap-16 border-b border-white/10 pb-16 md:flex-row md:justify-between">
         <div>
           <p className="text-2xl font-bold tracking-tight text-white">tr/be</p>
-          <p className="mt-3 font-gsans text-sm text-white/60">World&apos;s Most Boring Payments App.</p>
+          <p className="mt-3 font-gsans text-sm text-white/60">Your personal finance companion</p>
           <div className="mt-6 flex items-center gap-3">
             {SOCIALS.map(({ label, icon, href }) => (
               <a
