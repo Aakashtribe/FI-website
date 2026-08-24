@@ -39,34 +39,38 @@ export default function Hero() {
     offset: ['start start', 'end end'],
   })
 
-  const bgOpacity = useTransform(scrollYProgress, [0.1, 0.3], [1, 0])
-  const navTextColor = useTransform(scrollYProgress, [0.1, 0.3], ['#ffffff', '#1e1e1a'])
+  // The huge blue-sky intro now holds through most of the scroll (0-0.9) and
+  // only hands off to the shrunk white chat UI in one quick beat right at the
+  // end (0.9-0.95), instead of resolving early — a long dwell on the headline,
+  // then a fast transition, rather than a gradual one spread across the scroll.
+  const bgOpacity = useTransform(scrollYProgress, [0.85, 0.9], [1, 0])
+  const navTextColor = useTransform(scrollYProgress, [0.9, 0.95], ['#ffffff', '#1e1e1a'])
   // The logo is a single white PNG, so it's inverted (white -> black) over the
   // same range navTextColor crosses over, instead of swapping image assets.
-  const logoInvert = useTransform(scrollYProgress, [0.1, 0.3], [0, 1])
+  const logoInvert = useTransform(scrollYProgress, [0.9, 0.95], [0, 1])
 
-  const headlineOpacity = useTransform(scrollYProgress, [0, 0.2], [1, 0])
-  const headlineY = useTransform(scrollYProgress, [0, 0.22], [0, -20])
+  const headlineOpacity = useTransform(scrollYProgress, [0.85, 0.9], [1, 0])
+  const headlineY = useTransform(scrollYProgress, [0.85, 0.92], [0, -20])
 
   // Phone starts huge (screen fills the viewport, no bezel visible) and squeezes
   // down to its normal chat-interface size — then just holds there. No zoom back
   // up, no fade-out: it stops once settled, and FindMoney starts right below.
-  const phoneScale = useTransform(scrollYProgress, [0, 0.35], [coverScale, 1])
+  const phoneScale = useTransform(scrollYProgress, [0.9, 0.95], [coverScale, 1])
 
-  // The hand-off to white/chat now rides right on the phone settling (ends at
-  // 0.35), instead of lingering into a long half-blue transition afterward —
-  // the moment the phone is done shrinking, it's already turning white.
-  const chatContentOpacity = useTransform(scrollYProgress, [0.3, 0.35], [0, 1])
+  // The hand-off to white/chat rides right on the phone settling, instead of
+  // lingering into a long half-blue transition afterward — the moment the
+  // phone is done shrinking, it's already turning white.
+  const chatContentOpacity = useTransform(scrollYProgress, [0.9, 0.95], [0, 1])
   // The phone's screen shows a blue sky photo at rest (behind the headline), which
   // fades out right as the chat content fades in — a hand-off, not an overlap.
-  const skyOpacity = useTransform(scrollYProgress, [0.3, 0.35], [1, 0])
+  const skyOpacity = useTransform(scrollYProgress, [0.9, 0.95], [1, 0])
   // The phone's own drawn status-row text crossfades in color right alongside
   // that same hand-off, same trick as navTextColor above.
-  const statusBarColor = useTransform(scrollYProgress, [0.3, 0.35], ['#ffffff', '#1e1e1a'])
+  const statusBarColor = useTransform(scrollYProgress, [0.9, 0.95], ['#ffffff', '#1e1e1a'])
   // The in-screen chat starts typing right after that hand-off completes, then
   // holds its finished state for the rest of the forward scroll — it only
   // resets if the user scrolls back up past the start.
-  const chatActive = useTransform(scrollYProgress, [0.35, 0.4], [0, 1])
+  const chatActive = useTransform(scrollYProgress, [0.95, 0.98], [0, 1])
 
   return (
     <section ref={sectionRef} className="relative h-[160vh]">
