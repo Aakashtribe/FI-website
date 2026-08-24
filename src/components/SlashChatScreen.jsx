@@ -136,7 +136,7 @@ export default function SlashChatScreen({ active, notch, showStatusBar = true })
         </div>
       </div>
       <div className="absolute z-20 h-8 w-8" style={{ left: 312, top: 56 }}>
-        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#1e1e1a] text-[13px] font-medium text-white shadow-[0_0_1.6px_rgba(0,0,0,0.14)]">
+        <div className="flex h-8 w-8 items-center justify-center rounded-full border border-[#eaeae6] bg-white text-[13px] font-medium text-[#1e1e1a] shadow-[0_0_1.6px_rgba(0,0,0,0.14)]">
           A
         </div>
       </div>
