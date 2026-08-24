@@ -1,14 +1,19 @@
-import { motion } from 'framer-motion'
+import { motion, useMotionTemplate } from 'framer-motion'
 import { Link } from 'react-router-dom'
+import tribeLogo from '../assets/Tribe logo.png'
 
 const outerShadow = 'shadow-[0_12px_32px_-12px_rgba(0,0,0,0.25)]'
 const MotionLink = motion(Link)
 
-export default function Nav({ textColor = '#1e1e1a' }) {
+// The source asset is a single white PNG, so on light backgrounds it's
+// inverted (white -> black) via CSS filter instead of swapping images.
+export default function Nav({ textColor = '#1e1e1a', logoInvert = 1 }) {
+  const logoFilter = useMotionTemplate`invert(${logoInvert})`
+
   return (
     <header className="absolute top-0 left-0 right-0 z-20 grid grid-cols-3 items-center px-8 py-8 md:px-12">
-      <MotionLink to="/" style={{ color: textColor }} className="justify-self-start text-2xl font-bold tracking-tight">
-        tr/be
+      <MotionLink to="/" className="justify-self-start">
+        <motion.img src={tribeLogo} alt="tr/be" className="h-6 w-auto md:h-7" style={{ filter: logoFilter }} />
       </MotionLink>
 
       <nav

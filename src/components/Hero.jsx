@@ -41,6 +41,9 @@ export default function Hero() {
 
   const bgOpacity = useTransform(scrollYProgress, [0.1, 0.3], [1, 0])
   const navTextColor = useTransform(scrollYProgress, [0.1, 0.3], ['#ffffff', '#1e1e1a'])
+  // The logo is a single white PNG, so it's inverted (white -> black) over the
+  // same range navTextColor crosses over, instead of swapping image assets.
+  const logoInvert = useTransform(scrollYProgress, [0.1, 0.3], [0, 1])
 
   const headlineOpacity = useTransform(scrollYProgress, [0, 0.2], [1, 0])
   const headlineY = useTransform(scrollYProgress, [0, 0.22], [0, -20])
@@ -79,7 +82,7 @@ export default function Hero() {
           className="absolute inset-0 z-0 h-full w-full"
         />
 
-        <Nav textColor={navTextColor} />
+        <Nav textColor={navTextColor} logoInvert={logoInvert} />
 
         <motion.div
           style={{ opacity: headlineOpacity, y: headlineY }}
