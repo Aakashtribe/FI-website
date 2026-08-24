@@ -13,7 +13,7 @@ export default function Nav({ textColor = '#1e1e1a', logoInvert = 1 }) {
   return (
     <header className="absolute top-0 left-0 right-0 z-20 grid grid-cols-3 items-center px-8 py-8 md:px-12">
       <MotionLink to="/" className="justify-self-start">
-        <motion.img src={tribeLogo} alt="tr/be" className="h-6 w-auto md:h-7" style={{ filter: logoFilter }} />
+        <motion.img src={tribeLogo} alt="tr/be" className="h-12 w-auto" style={{ filter: logoFilter }} />
       </MotionLink>
 
       <nav
