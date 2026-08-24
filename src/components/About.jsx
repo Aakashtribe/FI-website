@@ -104,7 +104,6 @@ export default function About() {
       </section>
 
       <section className="flex flex-col items-center bg-white px-6 py-24">
-        <p className="font-gsans text-sm font-semibold uppercase tracking-[0.2em] text-[#858679]">The ones behind us</p>
         <h2 className="mt-3 text-[clamp(2rem,4.4vw,3.5rem)] font-semibold leading-[1.1] tracking-tight text-[#1e1e1a]">
           In good company
         </h2>
