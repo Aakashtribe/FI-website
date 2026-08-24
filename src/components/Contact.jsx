@@ -6,13 +6,12 @@ export default function Contact() {
     <>
       <section className="relative flex min-h-[70vh] flex-col justify-center bg-white px-6 pt-32 md:px-16">
         <Nav textColor="#1e1e1a" />
-        <h1 className="text-[clamp(2.5rem,6vw,5rem)] font-semibold leading-[1.05] tracking-tight">
-          <span className="text-[#1e1e1a]">Get in </span>
-          <span className="text-[#a3a39c]">touch.</span>
+        <h1 className="text-[clamp(2rem,4.4vw,3.75rem)] font-semibold leading-[1.1] tracking-tight text-[#1e1e1a]">
+          Get in touch.
         </h1>
         <a
           href="mailto:support@tribemoney.ai"
-          className="mt-4 inline-block text-[clamp(1.5rem,3vw,2.25rem)] font-semibold tracking-tight text-[#1e1e1a] transition-colors hover:text-[#858679]"
+          className="mt-6 inline-block max-w-xl font-gsans text-base text-[#858679] transition-colors hover:text-[#1e1e1a] md:text-lg"
         >
           support@tribemoney.ai
         </a>
