@@ -118,8 +118,10 @@ export default function SlashChatScreen({ active, notch, showStatusBar = true })
         <div className="absolute inset-0 bg-white" />
       )}
 
-      {/* Status bar — skipped when the phone frame already has one baked in (e.g. the
-          flat PNG mockup), so it isn't drawn twice. */}
+      {/* Standalone status bar (no real phone photo behind this canvas). When used
+          inside PhoneMockup, this is skipped — that component draws its own single
+          shared status row above this canvas instead (the island itself is
+          revealed from the photo via the cutout above, not drawn). */}
       {showStatusBar && (
         <div className="absolute left-0 top-0 z-20 flex h-[44px] w-[360px] items-center justify-between px-4">
           <span className="font-gsans text-[15.7px] font-semibold tracking-[-0.01em] text-[#010101]">9:30</span>

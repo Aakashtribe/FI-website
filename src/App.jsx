@@ -1,11 +1,16 @@
-import Hero from './components/Hero.jsx'
-import FindMoney from './components/FindMoney.jsx'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import Home from './components/Home.jsx'
+import About from './components/About.jsx'
 
 export default function App() {
   return (
-    <main className="bg-ink">
-      <Hero />
-      <FindMoney />
-    </main>
+    <BrowserRouter>
+      <main className="bg-ink">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/about" element={<About />} />
+        </Routes>
+      </main>
+    </BrowserRouter>
   )
 }

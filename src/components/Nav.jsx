@@ -1,9 +1,11 @@
 import { useRef, useState } from 'react'
 import { motion, useScroll, useMotionValueEvent } from 'framer-motion'
+import { Link } from 'react-router-dom'
 
 const outerShadow = 'shadow-[0_12px_32px_-12px_rgba(0,0,0,0.25)]'
+const MotionLink = motion(Link)
 
-export default function Nav({ textColor }) {
+export default function Nav({ textColor = '#1e1e1a' }) {
   const [hidden, setHidden] = useState(false)
   const lastY = useRef(0)
   const { scrollY } = useScroll()
@@ -18,22 +20,22 @@ export default function Nav({ textColor }) {
 
   return (
     <header className="absolute top-0 left-0 right-0 z-20 grid grid-cols-3 items-center px-8 py-8 md:px-12">
-      <motion.a href="#" style={{ color: textColor }} className="justify-self-start text-2xl font-bold tracking-tight">
+      <MotionLink to="/" style={{ color: textColor }} className="justify-self-start text-2xl font-bold tracking-tight">
         tr/be
-      </motion.a>
+      </MotionLink>
 
       <motion.nav
         animate={{ y: hidden ? -120 : 0, opacity: hidden ? 0 : 1 }}
         transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
         className={`glass-border hidden items-center justify-self-center gap-1 rounded-full bg-white/20 p-0 backdrop-blur-xl md:flex ${outerShadow}`}
       >
-        <motion.a
-          href="#about"
+        <MotionLink
+          to="/about"
           style={{ color: textColor }}
           className="rounded-full px-6 py-5 font-gsans text-base font-semibold leading-6 transition-colors hover:bg-white/20"
         >
           About us
-        </motion.a>
+        </MotionLink>
         <motion.a
           href="#contact"
           style={{ color: textColor }}

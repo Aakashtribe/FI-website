@@ -1,0 +1,8 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="calendar-stroke-rounded">
+<path id="Vector" d="M3 9H21" stroke="var(--stroke-0, #1e1e1a)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Vector_2" d="M8 3V5" stroke="var(--stroke-0, #1e1e1a)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Vector_3" d="M16 3V5" stroke="var(--stroke-0, #1e1e1a)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Vector_4" d="M3 12.5C3 8.75017 3 6.87526 4.17157 5.68763C5.34315 4.5 7.22876 4.5 11 4.5H13C16.7712 4.5 18.6569 4.5 19.8284 5.68763C21 6.87526 21 8.75017 21 12.5V13C21 16.7498 21 18.6247 19.8284 19.8124C18.6569 21 16.7712 21 13 21H11C7.22876 21 5.34315 21 4.17157 19.8124C3 18.6247 3 16.7498 3 13V12.5Z" stroke="var(--stroke-0, #1e1e1a)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+</svg>

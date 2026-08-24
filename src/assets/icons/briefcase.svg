@@ -1,0 +1,7 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="briefcase-stroke-rounded">
+<path id="Vector" d="M2 13C2 10.1997 2 8.79961 2.5359 7.73005C3.00745 6.78698 3.78698 6.00745 4.73005 5.5359C5.79961 5 7.19974 5 10 5H14C16.8003 5 18.2004 5 19.2699 5.5359C20.213 6.00745 20.9926 6.78698 21.4641 7.73005C22 8.79961 22 10.1997 22 13C22 15.8003 22 17.2004 21.4641 18.2699C20.9926 19.213 20.213 19.9926 19.2699 20.4641C18.2004 21 16.8003 21 14 21H10C7.19974 21 5.79961 21 4.73005 20.4641C3.78698 19.9926 3.00745 19.213 2.5359 18.2699C2 17.2004 2 15.8003 2 13Z" stroke="var(--stroke-0, #1e1e1a)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Vector_2" d="M8 5V4.5C8 3.11929 9.11929 2 10.5 2H13.5C14.8807 2 16 3.11929 16 4.5V5" stroke="var(--stroke-0, #1e1e1a)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Vector_3" d="M2 12.5C4.5 14 8.5 15 12 15C15.5 15 19.5 14 22 12.5" stroke="var(--stroke-0, #1e1e1a)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+</svg>
