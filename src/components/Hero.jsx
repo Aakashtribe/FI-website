@@ -39,12 +39,12 @@ export default function Hero() {
     offset: ['start start', 'end end'],
   })
 
-  // The huge blue-sky intro holds through the first half of the scroll, then
-  // hands off to the shrunk white chat UI over a slow, multi-scroll stretch
-  // (0.55-0.95) rather than a quick snap — long dwell, then a deliberate,
-  // scrollable transition instead of an instant cut.
-  const TRANSITION_START = 0.55
-  const TRANSITION_END = 0.95
+  // The hand-off to the shrunk white chat UI now begins on the very first
+  // scroll input, rather than holding the huge blue intro first — it still
+  // plays out over a slow, multi-scroll stretch (the same 0.4 width as
+  // before) rather than snapping instantly.
+  const TRANSITION_START = 0
+  const TRANSITION_END = 0.4
 
   const bgOpacity = useTransform(scrollYProgress, [TRANSITION_START, TRANSITION_START + 0.1], [1, 0])
   const navTextColor = useTransform(scrollYProgress, [TRANSITION_START, TRANSITION_END], ['#ffffff', '#1e1e1a'])
