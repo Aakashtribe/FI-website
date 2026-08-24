@@ -69,13 +69,14 @@ export default function Hero() {
   // The phone's own drawn status-row text crossfades in color right alongside
   // that same hand-off, same trick as navTextColor above.
   const statusBarColor = useTransform(scrollYProgress, [TRANSITION_START, TRANSITION_END], ['#ffffff', '#1e1e1a'])
-  // The in-screen chat starts the instant the hand-off is 80% done, rather
-  // than waiting for it to fully complete — otherwise the fade itself reads
-  // as added latency before anything happens. No separate eased range here
-  // either: it snaps on, then holds its finished state for the rest of the
-  // forward scroll — only resetting if the user scrolls back up past the start.
-  const chatStartPoint = TRANSITION_START + 0.8 * (TRANSITION_END - TRANSITION_START)
-  const chatActive = useTransform(scrollYProgress, [chatStartPoint, chatStartPoint + 0.001], [0, 1])
+  // The chat itself is scroll-scrubbed, not timer-driven: it starts partway
+  // through the phone's hand-off (so it isn't running illegibly while still
+  // huge) and plays out continuously across the rest of the scroll, holding
+  // briefly at fully-typed before FindMoney takes over. Whatever scroll
+  // position you stop at is exactly what's shown — nothing keeps animating
+  // on its own after you stop, and scrolling back up rewinds it.
+  const chatStartPoint = TRANSITION_START + 0.5 * (TRANSITION_END - TRANSITION_START)
+  const chatActive = useTransform(scrollYProgress, [chatStartPoint, 0.95], [0, 1])
 
   return (
     <section ref={sectionRef} className="relative h-[160vh]">
