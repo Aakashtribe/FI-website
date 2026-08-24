@@ -1,6 +1,5 @@
 import Nav from './Nav.jsx'
 import Footer from './Footer.jsx'
-import userIcon from '../assets/icons/user.svg'
 import linkedinIcon from '../assets/icons/linkedin.svg'
 import adityaPhoto from '../assets/Aditya.webp'
 import himanshuPhoto from '../assets/Himanshu.webp'
@@ -10,6 +9,14 @@ import peakXvLogo from '../assets/PeakXV.webp'
 import zeroPearlLogo from '../assets/Zeropearl.webp'
 import whiteVentureLogo from '../assets/White Venture.webp'
 import coinswitchLogo from '../assets/Coinswitch.webp'
+import abhirajPhoto from '../assets/Abhiraj.webp'
+import amrishPhoto from '../assets/Amrish.webp'
+import jitendraPhoto from '../assets/Jitender.webp'
+import kunalPhoto from '../assets/Kunal.webp'
+import pradeepPhoto from '../assets/Pradeep.webp'
+import raghavPhoto from '../assets/Raghav.webp'
+import rishabhPhoto from '../assets/Rishab.webp'
+import varunPhoto from '../assets/Varun.webp'
 
 const FOUNDERS = [
   { name: 'Aditya Varma', role: 'Co-Founder', bio: ['Ex SVP Urban Company', 'IIT Bombay & INSEAD'], photo: adityaPhoto },
@@ -25,14 +32,14 @@ const INVESTORS = [
 ]
 
 const ADVISORS = [
-  { name: 'Abhiraj Singh Bhal', title: 'CEO & Co-Founder, Urban Company' },
-  { name: 'Amrish Rau', title: 'CEO, Pine Labs' },
-  { name: 'Jitendra Gupta', title: 'Founder, Jupiter' },
-  { name: 'Kunal Shah', title: 'CEO & Founder, Cred' },
-  { name: 'Pradeep Parameswaran', title: 'Head of Mobility, Uber' },
-  { name: 'Raghav Chandra', title: 'CTO & Co-Founder, Urban Company' },
-  { name: 'Rishabh Goel', title: 'CEO & Co-Founder, Credgenics' },
-  { name: 'Varun Khaitan', title: 'COO & Co-Founder, Urban Company' },
+  { name: 'Abhiraj Singh Bhal', title: 'CEO & Co-Founder, Urban Company', photo: abhirajPhoto },
+  { name: 'Amrish Rau', title: 'CEO, Pine Labs', photo: amrishPhoto },
+  { name: 'Jitendra Gupta', title: 'Founder, Jupiter', photo: jitendraPhoto },
+  { name: 'Kunal Shah', title: 'CEO & Founder, Cred', photo: kunalPhoto },
+  { name: 'Pradeep Parameswaran', title: 'Head of Mobility, Uber', photo: pradeepPhoto },
+  { name: 'Raghav Chandra', title: 'CTO & Co-Founder, Urban Company', photo: raghavPhoto },
+  { name: 'Rishabh Goel', title: 'CEO & Co-Founder, Credgenics', photo: rishabhPhoto },
+  { name: 'Varun Khaitan', title: 'COO & Co-Founder, Urban Company', photo: varunPhoto },
 ]
 
 function FounderCard({ name, role, bio, photo }) {
@@ -113,8 +120,8 @@ export default function About() {
         <div className="mt-10 grid w-full max-w-5xl grid-cols-2 gap-6 sm:grid-cols-4">
           {ADVISORS.map((a) => (
             <div key={a.name} className="flex flex-col items-center text-center">
-              <div className="flex aspect-square w-full items-center justify-center rounded-2xl bg-[#f7f7f6]">
-                <img src={userIcon} alt="" className="h-10 w-10 opacity-30" />
+              <div className="aspect-square w-full overflow-hidden rounded-2xl bg-[#f7f7f6]">
+                <img src={a.photo} alt={a.name} className="h-full w-full object-cover" />
               </div>
               <p className="mt-3 font-gsans text-sm font-semibold text-[#1e1e1a]">{a.name}</p>
               <p className="font-gsans text-xs text-[#858679]">{a.title}</p>
