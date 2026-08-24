@@ -53,20 +53,20 @@ export default function Hero() {
   // up, no fade-out: it stops once settled, and FindMoney starts right below.
   const phoneScale = useTransform(scrollYProgress, [0, 0.35], [coverScale, 1])
 
-  // The in-screen chat plays once the phone has settled to its normal size, so it
-  // isn't running (illegibly) while the phone is still huge. No falling edge on
-  // the far end: once triggered, it holds its finished state for the rest of the
-  // forward scroll — it only resets if the user scrolls back up past the start.
-  const chatActive = useTransform(scrollYProgress, [0.55, 0.65], [0, 1])
-  // The chat's own white UI needs to stay hidden while the phone is huge — otherwise
-  // its white background sits directly behind the white headline with no contrast.
-  const chatContentOpacity = useTransform(scrollYProgress, [0.3, 0.45], [0, 1])
+  // The hand-off to white/chat now rides right on the phone settling (ends at
+  // 0.35), instead of lingering into a long half-blue transition afterward —
+  // the moment the phone is done shrinking, it's already turning white.
+  const chatContentOpacity = useTransform(scrollYProgress, [0.3, 0.35], [0, 1])
   // The phone's screen shows a blue sky photo at rest (behind the headline), which
   // fades out right as the chat content fades in — a hand-off, not an overlap.
-  const skyOpacity = useTransform(scrollYProgress, [0.3, 0.45], [1, 0])
+  const skyOpacity = useTransform(scrollYProgress, [0.3, 0.35], [1, 0])
   // The phone's own drawn status-row text crossfades in color right alongside
   // that same hand-off, same trick as navTextColor above.
-  const statusBarColor = useTransform(scrollYProgress, [0.3, 0.45], ['#ffffff', '#1e1e1a'])
+  const statusBarColor = useTransform(scrollYProgress, [0.3, 0.35], ['#ffffff', '#1e1e1a'])
+  // The in-screen chat starts typing right after that hand-off completes, then
+  // holds its finished state for the rest of the forward scroll — it only
+  // resets if the user scrolls back up past the start.
+  const chatActive = useTransform(scrollYProgress, [0.35, 0.4], [0, 1])
 
   return (
     <section ref={sectionRef} className="relative h-[160vh]">
