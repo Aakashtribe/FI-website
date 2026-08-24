@@ -1,13 +1,13 @@
 import { Link } from 'react-router-dom'
-import facebookIcon from '../assets/icons/facebook.svg'
-import instagramIcon from '../assets/icons/instagram.svg'
-import linkedinIcon from '../assets/icons/linkedin-outline.svg'
-import youtubeIcon from '../assets/icons/youtube.svg'
+import facebookIcon from '../assets/Facebook.png'
+import instagramIcon from '../assets/Instagram.png'
+import twitterIcon from '../assets/Twitter.png'
+import youtubeIcon from '../assets/Youtube.png'
 
 const SOCIALS = [
   { label: 'Facebook', icon: facebookIcon, href: '#' },
   { label: 'Instagram', icon: instagramIcon, href: 'https://www.instagram.com/tribe.money.india?igsi=MWlha2F3YmI4NzA4bw==' },
-  { label: 'LinkedIn', icon: linkedinIcon, href: '#' },
+  { label: 'Twitter', icon: twitterIcon, href: '#' },
   { label: 'YouTube', icon: youtubeIcon, href: '#' },
 ]
 
@@ -52,9 +52,9 @@ export default function Footer() {
                 target={href.startsWith('http') ? '_blank' : undefined}
                 rel={href.startsWith('http') ? 'noreferrer' : undefined}
                 aria-label={label}
-                className="flex h-9 w-9 items-center justify-center rounded-full border border-white/15 text-white/70 transition-colors hover:border-white/30 hover:text-white"
+                className="block h-9 w-9 overflow-hidden rounded-full opacity-80 transition-opacity hover:opacity-100"
               >
-                <img src={icon} alt="" className="h-4 w-4" />
+                <img src={icon} alt="" className="h-full w-full" />
               </a>
             ))}
           </div>
