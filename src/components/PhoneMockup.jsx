@@ -1,7 +1,7 @@
 import { useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { motion } from 'framer-motion'
 import phoneFrame from '../assets/iPhone 16 Plus Dark with dynamic island.png'
-import skyImg from '../assets/Hero 3.jpg'
+import skyImg from '../assets/Sea.jpg'
 import rightSideIcon from '../assets/icons/right-side.svg'
 import SlashChatScreen, { DESIGN_W, DESIGN_H } from './SlashChatScreen.jsx'
 
