@@ -4,7 +4,7 @@ import About from './components/About.jsx'
 
 export default function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={import.meta.env.BASE_URL}>
       <main className="bg-ink">
         <Routes>
           <Route path="/" element={<Home />} />
