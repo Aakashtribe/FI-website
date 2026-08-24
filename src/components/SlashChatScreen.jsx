@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { AnimatePresence, motion, useMotionValueEvent, useTransform } from 'framer-motion'
+import { useEffect, useRef, useState } from 'react'
+import { AnimatePresence, motion, useMotionValueEvent } from 'framer-motion'
 import micIcon from '../assets/icons/mic.svg'
 import arrowUpIcon from '../assets/icons/arrow-up.svg'
 import stopIcon from '../assets/icons/stop.svg'
@@ -19,6 +19,7 @@ import rightSideIcon from '../assets/icons/right-side.svg'
 export const DESIGN_W = 360
 export const DESIGN_H = 800
 
+const GREETING = 'Hey you,'
 const QUERY = 'My budget is chaos. Help me fix it. 🔥'
 const RESPONSE = "Don't worry, I've seen worse. 😌\nI'm about to investigate your finances like a true crime documentary."
 
@@ -29,46 +30,97 @@ const NAV_ITEMS = [
   { key: 'fd', label: 'FD', icon: bankIcon, active: false },
 ]
 
-// Each beat gets its own slice of the 0-1 progress range: a short idle hold
-// (just "Hey you,"), the query typing out, a short pause, then the reply
-// typing out — scaled by relative character count so neither one is rushed.
-const IDLE_END = 0.08
-const QUERY_END = IDLE_END + 0.4
-const PAUSE_END = QUERY_END + 0.07
-const RESPONSE_END = 1
-
-function remap(value, [inStart, inEnd]) {
-  if (inEnd === inStart) return value >= inEnd ? 1 : 0
-  return Math.min(1, Math.max(0, (value - inStart) / (inEnd - inStart)))
-}
-
 // The screen content only, sized to fill its parent — no phone chrome of its own.
-// `active` is a Framer Motion value tracking scroll progress directly (0-1): the
-// whole idle -> typing -> responding sequence is scrubbed by it rather than run
-// on independent timers, so wherever you stop scrolling is exactly what's shown
-// — no racing ahead while you're not looking, and scrolling back up rewinds it.
+// `active` is a Framer Motion value (0-1): the play loop starts on the rising edge
+// and freezes back to idle on the falling edge, so it can be gated by scroll.
 export default function SlashChatScreen({ active, notch, showStatusBar = true }) {
-  const queryLength = useTransform(active, (v) => Math.round(remap(v, [IDLE_END, QUERY_END]) * QUERY.length))
-  const responseLength = useTransform(active, (v) => Math.round(remap(v, [PAUSE_END, RESPONSE_END]) * RESPONSE.length))
+  // greeting -> idle -> typing -> responding (sent query + AI reply, instant —
+  // no loading state), then holds there. Plays once — no auto-loop — and only
+  // replays if the section leaves the viewport and comes back (`running`
+  // going false then true again).
+  const [phase, setPhase] = useState('greeting')
+  const [typedGreeting, setTypedGreeting] = useState('')
+  const [typedQuery, setTypedQuery] = useState('')
+  const [typedResponse, setTypedResponse] = useState('')
+  const [running, setRunning] = useState(active ? active.get() > 0.5 : true)
+  const startedRef = useRef(running)
 
-  const [typedQuery, setTypedQuery] = useState(QUERY.slice(0, queryLength.get()))
-  const [typedResponse, setTypedResponse] = useState(RESPONSE.slice(0, responseLength.get()))
-  const [isTyping, setIsTyping] = useState(active.get() > IDLE_END && active.get() < PAUSE_END)
-  const [isSent, setIsSent] = useState(active.get() >= PAUSE_END)
-
-  useMotionValueEvent(queryLength, 'change', (v) => setTypedQuery(QUERY.slice(0, v)))
-  useMotionValueEvent(responseLength, 'change', (v) => setTypedResponse(RESPONSE.slice(0, v)))
   useMotionValueEvent(active, 'change', (v) => {
-    setIsTyping(v > IDLE_END && v < PAUSE_END)
-    setIsSent(v >= PAUSE_END)
+    if (v > 0.5 && !startedRef.current) {
+      startedRef.current = true
+      setRunning(true)
+    } else if (v <= 0.5 && startedRef.current) {
+      startedRef.current = false
+      setRunning(false)
+      setPhase('greeting')
+      setTypedGreeting('')
+      setTypedQuery('')
+      setTypedResponse('')
+    }
   })
 
-  const isResponding = isSent
+  // The greeting types out the same way the query and reply do, instead of
+  // appearing as a finished block — the very first thing the screen does.
+  useEffect(() => {
+    if (!running || phase !== 'greeting') return
+    let i = 0
+    const id = setInterval(() => {
+      i += 1
+      setTypedGreeting(GREETING.slice(0, i))
+      if (i >= GREETING.length) {
+        clearInterval(id)
+        setTimeout(() => setPhase('idle'), 400)
+      }
+    }, 42)
+    return () => clearInterval(id)
+  }, [running, phase])
+
+  useEffect(() => {
+    if (!running || phase !== 'idle') return
+    const t = setTimeout(() => setPhase('typing'), 900)
+    return () => clearTimeout(t)
+  }, [running, phase])
+
+  useEffect(() => {
+    if (!running || phase !== 'typing') return
+    let i = 0
+    const id = setInterval(() => {
+      i += 1
+      setTypedQuery(QUERY.slice(0, i))
+      if (i >= QUERY.length) {
+        clearInterval(id)
+        setTimeout(() => setPhase('responding'), 450)
+      }
+    }, 42)
+    return () => clearInterval(id)
+  }, [running, phase])
+
+  // The AI reply is typed out the same way the query was — same per-character
+  // interval — rather than just fading in as a finished block. Once fully typed,
+  // it just holds there (no further phase transition, no reset).
+  useEffect(() => {
+    if (!running || phase !== 'responding') return
+    let i = 0
+    const id = setInterval(() => {
+      i += 1
+      setTypedResponse(RESPONSE.slice(0, i))
+      if (i >= RESPONSE.length) clearInterval(id)
+    }, 42)
+    return () => clearInterval(id)
+  }, [running, phase])
+
+  // The input box only shows live characters while actually typing; once sent, it
+  // resets to the placeholder and the typed query moves into its own bubble instead.
+  const isTyping = phase === 'typing'
+  const isSent = phase === 'responding'
+  const isResponding = phase === 'responding'
   const isResponseTyping = isResponding && typedResponse.length < RESPONSE.length
-  // Send button turns into a stop control (dark bg, stop-square icon) for the
-  // whole stretch there's something running to interrupt — the user's own
-  // query being typed, and the reply typing out after it — then reverts once
-  // the reply has fully landed and there's nothing left to stop.
+  // Three distinct button states: grey arrow (idle, nothing to send), dark
+  // arrow (user is typing their own query — "active" send button), dark
+  // stop-square (query sent, reply typing out — the only thing you'd
+  // actually want to interrupt). The bg goes dark for both busy states;
+  // only the icon itself distinguishes typing-your-own-query from the
+  // reply streaming back.
   const isBusy = isTyping || isResponseTyping
 
   return (
@@ -115,12 +167,12 @@ export default function SlashChatScreen({ active, notch, showStatusBar = true })
         </div>
       </div>
 
-      {/* Greeting */}
+      {/* Greeting — types out the same way the query and reply do */}
       <p
         className="absolute left-4 font-gsans text-[28px] font-bold leading-[36px] text-[#1e1e1a]"
         style={{ top: 116, width: 167 }}
       >
-        Hey you,
+        {typedGreeting}
       </p>
 
       {/* The user's sent query, moved out of the input box into its own bubble */}
@@ -153,7 +205,6 @@ export default function SlashChatScreen({ active, notch, showStatusBar = true })
             style={{ top: 248, width: 320 }}
           >
             {typedResponse}
-            {typedResponse.length < RESPONSE.length && '|'}
           </motion.p>
         )}
       </AnimatePresence>
@@ -182,7 +233,7 @@ export default function SlashChatScreen({ active, notch, showStatusBar = true })
                 className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full transition-colors duration-200"
                 style={{ backgroundColor: isBusy ? '#1e1e1a' : '#858679' }}
               >
-                <img src={isBusy ? stopIcon : arrowUpIcon} alt="" className="h-6 w-6" />
+                <img src={isResponseTyping ? stopIcon : arrowUpIcon} alt="" className="h-6 w-6" />
               </div>
             </div>
           </div>
