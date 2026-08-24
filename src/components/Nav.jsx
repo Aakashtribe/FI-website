@@ -36,13 +36,13 @@ export default function Nav({ textColor = '#1e1e1a' }) {
         >
           About us
         </MotionLink>
-        <motion.a
-          href="#contact"
+        <MotionLink
+          to="/contact"
           style={{ color: textColor }}
           className="rounded-full px-6 py-5 font-gsans text-base font-semibold leading-6 transition-colors hover:bg-white/20"
         >
           Contact us
-        </motion.a>
+        </MotionLink>
       </motion.nav>
 
       <motion.a

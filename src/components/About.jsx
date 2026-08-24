@@ -81,7 +81,7 @@ export default function About() {
         </p>
       </section>
 
-      <section className="flex flex-col items-center bg-[#f7f7f6] px-6 py-24">
+      <section className="flex flex-col items-center bg-[#f7f7f6] px-6 py-24 lg:px-16">
         <div className="max-w-2xl text-center">
           <h2 className="text-[clamp(2rem,4.4vw,3.5rem)] font-semibold leading-[1.1] tracking-tight text-[#1e1e1a]">
             The builders behind tr/be
