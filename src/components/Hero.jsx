@@ -69,11 +69,13 @@ export default function Hero() {
   // The phone's own drawn status-row text crossfades in color right alongside
   // that same hand-off, same trick as navTextColor above.
   const statusBarColor = useTransform(scrollYProgress, [TRANSITION_START, TRANSITION_END], ['#ffffff', '#1e1e1a'])
-  // The in-screen chat starts the instant the hand-off hits 100% — no separate
-  // eased range afterward, so there's no latency between "turned white" and
-  // "chat is running". It then holds its finished state for the rest of the
+  // The in-screen chat starts the instant the hand-off is 80% done, rather
+  // than waiting for it to fully complete — otherwise the fade itself reads
+  // as added latency before anything happens. No separate eased range here
+  // either: it snaps on, then holds its finished state for the rest of the
   // forward scroll — only resetting if the user scrolls back up past the start.
-  const chatActive = useTransform(scrollYProgress, [TRANSITION_END, TRANSITION_END + 0.001], [0, 1])
+  const chatStartPoint = TRANSITION_START + 0.8 * (TRANSITION_END - TRANSITION_START)
+  const chatActive = useTransform(scrollYProgress, [chatStartPoint, chatStartPoint + 0.001], [0, 1])
 
   return (
     <section ref={sectionRef} className="relative h-[160vh]">

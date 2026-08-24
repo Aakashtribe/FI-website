@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion, useMotionValueEvent } from 'framer-motion'
 import micIcon from '../assets/icons/mic.svg'
 import arrowUpIcon from '../assets/icons/arrow-up.svg'
+import stopIcon from '../assets/icons/stop.svg'
 import slashAiIcon from '../assets/icons/slash-ai.svg'
 import creditCardIcon from '../assets/icons/credit-card.svg'
 import safeBoxIcon from '../assets/icons/safe-box.svg'
@@ -93,9 +94,12 @@ export default function SlashChatScreen({ active, notch, showStatusBar = true })
   const isTyping = phase === 'typing'
   const isSent = phase === 'responding'
   const isResponding = phase === 'responding'
-  // Send button is only dark while there's live input — no loading state to hold it
-  // dark for, since the reply lands instantly.
-  const isBusy = isTyping
+  const isResponseTyping = isResponding && typedResponse.length < RESPONSE.length
+  // Send button turns into a stop control (dark bg, stop-square icon) for the
+  // whole stretch there's something running to interrupt — the user's own
+  // query being typed, and the reply typing out after it — then reverts once
+  // the reply has fully landed and there's nothing left to stop.
+  const isBusy = isTyping || isResponseTyping
 
   return (
     <div className="relative overflow-hidden" style={{ width: DESIGN_W, height: DESIGN_H }}>
@@ -208,7 +212,7 @@ export default function SlashChatScreen({ active, notch, showStatusBar = true })
                 className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full transition-colors duration-200"
                 style={{ backgroundColor: isBusy ? '#1e1e1a' : '#858679' }}
               >
-                <img src={arrowUpIcon} alt="" className="h-6 w-6" />
+                <img src={isBusy ? stopIcon : arrowUpIcon} alt="" className="h-6 w-6" />
               </div>
             </div>
           </div>
