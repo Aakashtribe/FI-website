@@ -160,13 +160,17 @@ export default function PhoneMockup({
             height: ISLAND.height * scale.y,
             left: 0,
             width: boxSize.width,
-            paddingLeft: 16 * scale.x,
-            paddingRight: 16 * scale.x,
+            paddingLeft: 22 * scale.x,
+            paddingRight: 22 * scale.x,
           }}
         >
           <motion.span
-            className="font-gsans font-semibold tracking-[-0.01em]"
-            style={{ fontSize: 15.7 * scale.y, color: statusBarColor }}
+            className="font-semibold tracking-[-0.01em]"
+            style={{
+              fontSize: 15.7 * scale.y,
+              color: statusBarColor,
+              fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", system-ui, sans-serif',
+            }}
           >
             10:20
           </motion.span>
