@@ -165,7 +165,7 @@ export default function PhoneMockup({
           }}
         >
           <motion.span
-            className="font-semibold tracking-[-0.01em]"
+            className="font-normal tracking-[-0.01em]"
             style={{
               fontSize: 15.7 * scale.y,
               color: statusBarColor,
