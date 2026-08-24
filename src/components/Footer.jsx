@@ -5,10 +5,10 @@ import linkedinIcon from '../assets/icons/linkedin-outline.svg'
 import youtubeIcon from '../assets/icons/youtube.svg'
 
 const SOCIALS = [
-  { label: 'Facebook', icon: facebookIcon },
-  { label: 'Instagram', icon: instagramIcon },
-  { label: 'LinkedIn', icon: linkedinIcon },
-  { label: 'YouTube', icon: youtubeIcon },
+  { label: 'Facebook', icon: facebookIcon, href: '#' },
+  { label: 'Instagram', icon: instagramIcon, href: 'https://www.instagram.com/tribe.money.india?igsi=MWlha2F3YmI4NzA4bw==' },
+  { label: 'LinkedIn', icon: linkedinIcon, href: '#' },
+  { label: 'YouTube', icon: youtubeIcon, href: '#' },
 ]
 
 // Links without a `to` don't have a page yet, so they render as plain
@@ -45,10 +45,12 @@ export default function Footer() {
           <p className="text-2xl font-bold tracking-tight text-white">tr/be</p>
           <p className="mt-3 font-gsans text-sm text-white/60">World&apos;s Most Boring Payments App.</p>
           <div className="mt-6 flex items-center gap-3">
-            {SOCIALS.map(({ label, icon }) => (
+            {SOCIALS.map(({ label, icon, href }) => (
               <a
                 key={label}
-                href="#"
+                href={href}
+                target={href.startsWith('http') ? '_blank' : undefined}
+                rel={href.startsWith('http') ? 'noreferrer' : undefined}
                 aria-label={label}
                 className="flex h-9 w-9 items-center justify-center rounded-full border border-white/15 text-white/70 transition-colors hover:border-white/30 hover:text-white"
               >
@@ -60,7 +62,7 @@ export default function Footer() {
             type="button"
             className="mt-8 rounded-full border border-white/15 px-5 py-3 font-gsans text-sm font-semibold text-white transition-colors hover:bg-white/10"
           >
-            Download the app
+            Get the app
           </button>
         </div>
 
