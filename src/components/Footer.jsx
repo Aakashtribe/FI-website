@@ -1,4 +1,5 @@
-import { Link } from 'react-router-dom'
+import Link from 'next/link'
+import { useAppStoreLink } from '../appLinks.js'
 import facebookIcon from '../assets/Facebook.png'
 import instagramIcon from '../assets/Instagram.png'
 import twitterIcon from '../assets/Twitter.png'
@@ -11,9 +12,9 @@ const SOCIALS = [
   { label: 'YouTube', icon: youtubeIcon, href: '#' },
 ]
 
-// Links without a `to` don't have a page yet, so they render as plain
+// Links without an `href` don't have a page yet, so they render as plain
 // (non-navigating) text rather than pointing somewhere broken.
-const COMPANY_LINKS = [{ label: 'About', to: '/about' }, { label: 'Contact', to: '/contact' }]
+const COMPANY_LINKS = [{ label: 'About', href: '/about' }, { label: 'Contact', href: '/contact' }]
 const SUPPORT_LINKS = [{ label: 'Privacy' }, { label: 'Terms' }]
 
 function FooterColumn({ title, items }) {
@@ -22,8 +23,8 @@ function FooterColumn({ title, items }) {
       <p className="font-gsans text-xs font-semibold uppercase tracking-[0.15em] text-white/40">{title}</p>
       <div className="mt-4 flex flex-col gap-3">
         {items.map((item) =>
-          item.to ? (
-            <Link key={item.label} to={item.to} className="font-gsans text-sm text-white/70 transition-colors hover:text-white">
+          item.href ? (
+            <Link key={item.label} href={item.href} className="font-gsans text-sm text-white/70 transition-colors hover:text-white">
               {item.label}
             </Link>
           ) : (
@@ -38,6 +39,7 @@ function FooterColumn({ title, items }) {
 }
 
 export default function Footer() {
+  const appStoreLink = useAppStoreLink()
   return (
     <footer className="bg-ink px-6 pb-8 pt-16 md:px-16">
       <div className="mx-auto flex max-w-6xl flex-col gap-16 border-b border-white/10 pb-16 md:flex-row md:justify-between">
@@ -58,12 +60,14 @@ export default function Footer() {
               </a>
             ))}
           </div>
-          <button
-            type="button"
-            className="mt-8 rounded-full border border-white/15 px-5 py-3 font-gsans text-sm font-semibold text-white transition-colors hover:bg-white/10"
+          <a
+            href={appStoreLink}
+            target="_blank"
+            rel="noreferrer"
+            className="mt-8 inline-block rounded-full border border-white/15 px-5 py-3 font-gsans text-sm font-semibold text-white transition-colors hover:bg-white/10"
           >
             Get the app
-          </button>
+          </a>
         </div>
 
         <div className="flex flex-wrap gap-12 md:gap-20">
