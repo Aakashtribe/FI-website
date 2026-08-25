@@ -44,7 +44,7 @@ export default function DataPrivacy() {
           </button>
         </div>
         <div className="flex shrink-0 items-center justify-center">
-          <img src={shieldImage} alt="" className="h-[400px] w-[400px]" />
+          <img src={shieldImage} alt="" className="h-[280px] w-[280px] md:h-[400px] md:w-[400px]" />
         </div>
       </div>
     </section>

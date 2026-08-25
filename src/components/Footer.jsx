@@ -5,11 +5,13 @@ import instagramIcon from '../assets/Instagram.png'
 import twitterIcon from '../assets/Twitter.png'
 import youtubeIcon from '../assets/Youtube.png'
 
+// Only Instagram is a live account so far — the rest render disabled
+// (dimmed, unclickable) rather than linking to '#' or disappearing outright.
 const SOCIALS = [
-  { label: 'Facebook', icon: facebookIcon, href: '#' },
+  { label: 'Facebook', icon: facebookIcon, disabled: true },
   { label: 'Instagram', icon: instagramIcon, href: 'https://www.instagram.com/tribe.money.india?igsi=MWlha2F3YmI4NzA4bw==' },
-  { label: 'Twitter', icon: twitterIcon, href: '#' },
-  { label: 'YouTube', icon: youtubeIcon, href: '#' },
+  { label: 'Twitter', icon: twitterIcon, disabled: true },
+  { label: 'YouTube', icon: youtubeIcon, disabled: true },
 ]
 
 // Links without an `href` don't have a page yet, so they render as plain
@@ -47,18 +49,28 @@ export default function Footer() {
           <p className="text-2xl font-bold tracking-tight text-white">tr/be</p>
           <p className="mt-3 font-gsans text-sm text-white/60">Your personal finance companion</p>
           <div className="mt-6 flex items-center gap-3">
-            {SOCIALS.map(({ label, icon, href }) => (
-              <a
-                key={label}
-                href={href}
-                target={href.startsWith('http') ? '_blank' : undefined}
-                rel={href.startsWith('http') ? 'noreferrer' : undefined}
-                aria-label={label}
-                className="block h-9 w-9 overflow-hidden rounded-full opacity-80 transition-opacity hover:opacity-100"
-              >
-                <img src={icon} alt="" className="h-full w-full" />
-              </a>
-            ))}
+            {SOCIALS.map(({ label, icon, href, disabled }) =>
+              disabled ? (
+                <span
+                  key={label}
+                  aria-label={`${label} (coming soon)`}
+                  className="block h-9 w-9 overflow-hidden rounded-full opacity-30"
+                >
+                  <img src={icon} alt="" className="h-full w-full" />
+                </span>
+              ) : (
+                <a
+                  key={label}
+                  href={href}
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label={label}
+                  className="block h-9 w-9 overflow-hidden rounded-full opacity-80 transition-opacity hover:opacity-100"
+                >
+                  <img src={icon} alt="" className="h-full w-full" />
+                </a>
+              )
+            )}
           </div>
           <a
             href={appStoreLink}
