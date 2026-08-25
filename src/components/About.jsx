@@ -96,12 +96,10 @@ export default function About() {
         <h1 className="max-w-3xl text-[clamp(2rem,4.4vw,3.75rem)] font-semibold leading-[1.1] tracking-tight text-[#1e1e1a]">
           tr/be is for builders
         </h1>
-        <p className="mt-6 max-w-xl font-gsans text-base text-[#858679] md:text-lg">
-          People who work hard, and work with passion. People who are creating, growing, building a better tomorrow
-          for themselves and everyone around them.
-        </p>
-        <p className="mt-4 max-w-xl font-gsans text-base font-medium text-[#1e1e1a] md:text-lg">
-          You focus on building. tr/be takes care of your money. Intelligently. Relentlessly. Just for you.
+        <p className="mt-6 max-w-3xl font-gsans text-base text-[#858679] md:text-lg">
+          People who are working hard to build a better tomorrow.{' '}
+          <br className="hidden md:inline" />
+          tr/be takes care of your money. Intelligently. Relentlessly. While you focus on building.
         </p>
       </section>
 

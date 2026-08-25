@@ -56,17 +56,17 @@ function PortfolioRebalanceCard() {
 function RegularToDirectCard() {
   return (
     <WidgetShell glass title="Regular to Direct funds" subtitle="₹1.12Cr in regular plans">
-      <p className="mt-4 font-gsans text-sm text-white">
+      <p className="mt-4 font-gsans text-xs text-white md:text-sm">
         Regular funds charge high fees. Move to Direct funds with much lower fees.
       </p>
       <div className="mt-6 flex items-center justify-around">
         <div className="text-center">
           <p className="font-gsans text-xs text-white/50">Current fee</p>
-          <p className="mt-1 font-gsans text-2xl font-semibold text-white/50">₹2.12L</p>
+          <p className="mt-1 font-gsans text-lg font-semibold md:text-2xl text-white/50">₹2.12L</p>
         </div>
         <div className="text-center">
           <p className="font-gsans text-xs text-white/50">Low-cost alternative</p>
-          <p className="mt-1 font-gsans text-2xl font-semibold text-white">₹95,300</p>
+          <p className="mt-1 font-gsans text-lg font-semibold md:text-2xl text-white">₹95,300</p>
         </div>
       </div>
       <div className="flex-1" />
@@ -82,7 +82,7 @@ const START_VALUE = 2.5
 const END_VALUE = 20
 const START_YEAR = 2025
 const END_YEAR = 2035
-const PLOT = { left: 8, right: 292, top: 14, bottom: 96 }
+const PLOT = { left: 8, right: 292, top: 16, bottom: 162 }
 const CHART_TOP_VALUE = END_VALUE * 1.08
 
 const valueToY = (value) => PLOT.bottom - (value / CHART_TOP_VALUE) * (PLOT.bottom - PLOT.top)
@@ -116,7 +116,7 @@ function GrowthChart() {
   const midY = valueToY(valueAtYear(MID_YEAR))
 
   return (
-    <svg viewBox="0 0 300 118" className="w-full" role="img" aria-label="Projected portfolio growth reaching ₹20 Cr by 2035">
+    <svg viewBox="0 0 300 190" className="w-full" role="img" aria-label="Projected portfolio growth reaching ₹20 Cr by 2035">
       {GRID_VALUES.map((v) => (
         <g key={v}>
           <line x1={PLOT.left} y1={valueToY(v)} x2={PLOT.right} y2={valueToY(v)} stroke="rgba(255,255,255,0.08)" strokeWidth="1" />
@@ -160,10 +160,9 @@ function GrowthChart() {
 function GrowthCard() {
   return (
     <WidgetShell glass title="Projected portfolio growth" subtitle="At your current investment rate">
-      <div className="mt-4">
+      <div className="mt-4 flex min-h-0 flex-1 flex-col justify-center overflow-hidden">
         <GrowthChart />
       </div>
-      <div className="flex-1" />
       <Callout glass label="On track to grow to" amount="₹20 Cr by 2035" />
     </WidgetShell>
   )

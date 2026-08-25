@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import shieldImage from '../assets/Shield.png'
 import eyeOffIcon from '../assets/icons/eye-off.svg'
 import safeBoxIcon from '../assets/icons/safe-box.svg'
@@ -36,12 +37,12 @@ export default function DataPrivacy() {
               </div>
             ))}
           </div>
-          <button
-            type="button"
-            className="mt-10 rounded-full bg-[#1e1e1a] px-6 py-3 font-gsans text-sm font-medium text-white transition-colors duration-200 hover:bg-[#33322c]"
+          <Link
+            href="/privacy"
+            className="mt-10 inline-block rounded-full bg-[#1e1e1a] px-6 py-3 font-gsans text-sm font-medium text-white transition-colors duration-200 hover:bg-[#33322c]"
           >
             Learn more
-          </button>
+          </Link>
         </div>
         <div className="flex shrink-0 items-center justify-center">
           <img src={shieldImage} alt="" className="h-[280px] w-[280px] md:h-[400px] md:w-[400px]" />

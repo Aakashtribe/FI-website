@@ -1,12 +1,12 @@
-import { useId, useRef, useState } from 'react'
-import { motion, useMotionValueEvent, useScroll, useTransform } from 'framer-motion'
+import { useEffect, useId, useLayoutEffect, useRef, useState } from 'react'
+import { animate, motion, useMotionValue, useMotionValueEvent, useScroll, useTransform } from 'framer-motion'
 import arrowUpRightIcon from '../assets/icons/arrow-up-right.svg'
 import arrowDownRightIcon from '../assets/icons/arrow-down-right.svg'
 import trendingUpIcon from '../assets/icons/trending-up.svg'
 import bankIcon from '../assets/icons/bank.svg'
 import briefcaseIcon from '../assets/icons/briefcase.svg'
-import laptopIcon from '../assets/icons/laptop.svg'
 import percentIcon from '../assets/icons/percent.svg'
+import giftIcon from '../assets/icons/gift.svg'
 import moreHorizontalIcon from '../assets/icons/more-horizontal.svg'
 import safeBoxIcon from '../assets/icons/safe-box.svg'
 import shieldCheckIcon from '../assets/icons/shield-check.svg'
@@ -18,7 +18,6 @@ import calendarIcon from '../assets/icons/calendar.svg'
 const SHADE_1 = '#ffffff'
 const SHADE_2 = '#c9cac2'
 const SHADE_3 = '#8f9086'
-const SHADE_4 = '#55564f'
 
 function AnimatedAmount({ progress, target, format }) {
   const [value, setValue] = useState(0)
@@ -61,8 +60,12 @@ function Sparkline({ progress }) {
   const t = idxFloat - i0
   const [x0, y0] = points[i0]
   const [x1, y1] = points[i1]
-  const dotX = x0 + (x1 - x0) * t
-  const dotY = y0 + (y1 - y0) * t
+  // The dot's own radius + stroke can poke past the viewBox edge right as it
+  // reaches the last point (x = w) — nudged inward just for the dot so the
+  // circle itself never gets clipped, without changing the line/fill shape.
+  const DOT_MARGIN = 5
+  const dotX = Math.min(Math.max(x0 + (x1 - x0) * t, DOT_MARGIN), w - DOT_MARGIN)
+  const dotY = Math.min(Math.max(y0 + (y1 - y0) * t, DOT_MARGIN), h - DOT_MARGIN)
 
   return (
     <svg viewBox={`0 0 ${w} ${h}`} className="w-full" preserveAspectRatio="none">
@@ -93,8 +96,8 @@ function ScreenHeader({ icon, title, subtitle }) {
         <img src={icon} alt="" className="h-5 w-5 invert" />
       </div>
       <div>
-        <p className="font-gsans text-base font-semibold text-white">{title}</p>
-        <p className="font-gsans text-xs text-white/50">{subtitle}</p>
+        <p className="font-gsans text-sm font-semibold text-white md:text-base">{title}</p>
+        <p className="font-gsans text-[11px] text-white/50 md:text-xs">{subtitle}</p>
       </div>
     </div>
   )
@@ -105,9 +108,9 @@ function BreakdownRow({ icon, label, value }) {
     <div className="flex items-center justify-between py-2">
       <div className="flex items-center gap-2.5">
         <img src={icon} alt="" className="h-4 w-4 opacity-70 invert" />
-        <span className="font-gsans text-sm text-white">{label}</span>
+        <span className="font-gsans text-xs text-white md:text-sm">{label}</span>
       </div>
-      <span className="font-gsans text-sm text-white/50">{value}</span>
+      <span className="font-gsans text-xs text-white/50 md:text-sm">{value}</span>
     </div>
   )
 }
@@ -116,7 +119,7 @@ function ScreenFooter({ text }) {
   return (
     <div className="mt-4 flex items-center gap-2 border-t border-white/10 pt-4">
       <img src={shieldCheckIcon} alt="" className="h-4 w-4 opacity-50 invert" />
-      <span className="font-gsans text-xs text-white/50">{text}</span>
+      <span className="font-gsans text-[11px] text-white/50 md:text-xs">{text}</span>
     </div>
   )
 }
@@ -130,18 +133,18 @@ function IncomeScreen({ progress }) {
   return (
     <div className={SCREEN_CARD_CLASS}>
       <ScreenHeader icon={arrowUpRightIcon} title="Income" subtitle="Money coming in" />
-      <p className="mt-5 font-gsans text-3xl font-semibold text-white">
+      <p className="mt-5 font-gsans text-2xl font-semibold text-white md:text-3xl">
         <AnimatedAmount progress={progress} target={184200} format={formatRupees} />
       </p>
-      <p className="mt-1 font-gsans text-sm text-white">+12.4% vs last month</p>
+      <p className="mt-1 font-gsans text-xs text-white md:text-sm">+12.4% vs last month</p>
       <div className="mt-4">
         <Sparkline progress={progress} />
       </div>
       <div className="mt-2 divide-y divide-white/10">
         <BreakdownRow icon={briefcaseIcon} label="Salary" value="₹1,20,000" />
-        <BreakdownRow icon={laptopIcon} label="Freelance" value="₹42,000" />
-        <BreakdownRow icon={percentIcon} label="Interest" value="₹15,200" />
-        <BreakdownRow icon={moreHorizontalIcon} label="Others" value="₹6,000" />
+        <BreakdownRow icon={percentIcon} label="Interest" value="₹42,000" />
+        <BreakdownRow icon={giftIcon} label="Cashback" value="₹15,200" />
+        <BreakdownRow icon={trendingUpIcon} label="Stocks" value="₹6,000" />
       </div>
       <ScreenFooter text="Updated from your bank accounts" />
     </div>
@@ -149,10 +152,9 @@ function IncomeScreen({ progress }) {
 }
 
 const EXPENSE_SEGMENTS = [
-  { key: 'needs', label: 'Needs', pct: 48, shade: SHADE_1 },
-  { key: 'lifestyle', label: 'Lifestyle', pct: 32, shade: SHADE_2 },
-  { key: 'bills', label: 'Bills', pct: 14, shade: SHADE_3 },
-  { key: 'subscriptions', label: 'Subscriptions', pct: 6, shade: SHADE_4 },
+  { key: 'committed', label: 'Committed', pct: 48, shade: SHADE_1 },
+  { key: 'essential', label: 'Essential', pct: 32, shade: SHADE_2 },
+  { key: 'lifestyle', label: 'Lifestyle', pct: 20, shade: SHADE_3 },
 ]
 
 function ExpenseDonut({ progress }) {
@@ -202,8 +204,8 @@ function ExpenseDonut({ progress }) {
         ))}
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
-        <span className="font-gsans text-sm text-white/50">This</span>
-        <span className="font-gsans text-sm text-white/50">month</span>
+        <span className="font-gsans text-xs text-white/50 md:text-sm">This</span>
+        <span className="font-gsans text-xs text-white/50 md:text-sm">month</span>
       </div>
     </div>
   )
@@ -213,18 +215,18 @@ function ExpensesScreen({ progress }) {
   return (
     <div className={SCREEN_CARD_CLASS}>
       <ScreenHeader icon={arrowDownRightIcon} title="Expenses" subtitle="Where your money goes" />
-      <p className="mt-5 font-gsans text-3xl font-semibold text-white">
+      <p className="mt-5 font-gsans text-2xl font-semibold text-white md:text-3xl">
         <AnimatedAmount progress={progress} target={92400} format={formatRupees} />
       </p>
-      <p className="mt-1 font-gsans text-sm text-white/50">-8% vs last month</p>
+      <p className="mt-1 font-gsans text-xs text-white/50 md:text-sm">-8% vs last month</p>
       <div className="mt-4 flex items-center gap-6">
         <ExpenseDonut progress={progress} />
         <div className="flex flex-col gap-2.5">
           {EXPENSE_SEGMENTS.map(({ key, label, pct, shade }) => (
             <div key={key} className="flex items-center gap-2">
               <span className="h-2 w-2 shrink-0 rounded-full" style={{ backgroundColor: shade }} />
-              <span className="font-gsans text-sm text-white">{label}</span>
-              <span className="font-gsans text-sm text-white/50">{pct}%</span>
+              <span className="font-gsans text-xs text-white md:text-sm">{label}</span>
+              <span className="font-gsans text-xs text-white/50 md:text-sm">{pct}%</span>
             </div>
           ))}
         </div>
@@ -238,10 +240,10 @@ function InvestmentsScreen({ progress }) {
   return (
     <div className={SCREEN_CARD_CLASS}>
       <ScreenHeader icon={trendingUpIcon} title="Investments" subtitle="Your wealth at work" />
-      <p className="mt-5 font-gsans text-3xl font-semibold text-white">
+      <p className="mt-5 font-gsans text-2xl font-semibold text-white md:text-3xl">
         <AnimatedAmount progress={progress} target={1240000} format={formatLakhs} />
       </p>
-      <p className="mt-1 font-gsans text-sm text-white">
+      <p className="mt-1 font-gsans text-xs text-white md:text-sm">
         +₹1.8L (14.6%) <span className="text-white/50">Total returns</span>
       </p>
       <div className="mt-4">
@@ -311,8 +313,8 @@ function RepaidGauge({ pct, progress }) {
         />
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
-        <span className="font-gsans text-2xl font-semibold text-white">{Math.round(currentPct)}%</span>
-        <span className="font-gsans text-sm text-white/50">Repaid</span>
+        <span className="font-gsans text-xl font-semibold text-white md:text-2xl">{Math.round(currentPct)}%</span>
+        <span className="font-gsans text-xs text-white/50 md:text-sm">Repaid</span>
       </div>
     </div>
   )
@@ -322,18 +324,18 @@ function LoansScreen({ progress }) {
   return (
     <div className={SCREEN_CARD_CLASS}>
       <ScreenHeader icon={bankIcon} title="Loans" subtitle="What you owe" />
-      <p className="mt-5 font-gsans text-3xl font-semibold text-white">
+      <p className="mt-5 font-gsans text-2xl font-semibold text-white md:text-3xl">
         <AnimatedAmount progress={progress} target={320000} format={formatLakhs} />
       </p>
-      <p className="mt-1 font-gsans text-sm text-white/50">Outstanding balance</p>
+      <p className="mt-1 font-gsans text-xs text-white/50 md:text-sm">Outstanding balance</p>
       <div className="mt-4 flex justify-center">
         <RepaidGauge pct={32} progress={progress} />
       </div>
       <div className="mt-4 flex items-center justify-between rounded-xl border border-white/10 px-4 py-3">
         <div>
-          <p className="font-gsans text-xs text-white/50">Total EMI</p>
-          <p className="font-gsans text-base font-semibold text-white">
-            ₹8,400 <span className="text-xs font-normal text-white/50">/ month</span>
+          <p className="font-gsans text-[11px] text-white/50 md:text-xs">Total EMI</p>
+          <p className="font-gsans text-sm font-semibold text-white md:text-base">
+            ₹8,400 <span className="text-[11px] font-normal text-white/50 md:text-xs">/ month</span>
           </p>
         </div>
         <img src={calendarIcon} alt="" className="h-5 w-5 opacity-60 invert" />
@@ -361,16 +363,80 @@ const SCREENS = [
 // invisibly, hidden underneath it.
 export default function MoneyOverview() {
   const sectionRef = useRef(null)
+  const trackRef = useRef(null)
+  const draggingRef = useRef(false)
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ['start start', 'end end'],
   })
 
-  const trackX = useTransform(
+  // Mobile and tablet are touch devices — dragging the card left/right feels
+  // native there, whereas on desktop a mouse "drag" would just fight with
+  // normal scroll-wheel/trackpad use, so it's gated to below the same lg
+  // breakpoint the nav collapses at.
+  const [isTouch, setIsTouch] = useState(false)
+  useEffect(() => {
+    const check = () => setIsTouch(window.innerWidth < 1024)
+    check()
+    window.addEventListener('resize', check)
+    return () => window.removeEventListener('resize', check)
+  }, [])
+
+  // Measured live (not assumed from max-w-sm) so drag distance and snap
+  // points always match the card's actual rendered width.
+  const [trackWidth, setTrackWidth] = useState(0)
+  useLayoutEffect(() => {
+    const el = trackRef.current
+    if (!el) return
+    const measure = () => setTrackWidth(el.getBoundingClientRect().width)
+    measure()
+    const ro = new ResizeObserver(measure)
+    ro.observe(el)
+    return () => ro.disconnect()
+  }, [])
+
+  // Scroll still drives the resting position (screen index as a continuous
+  // 0-3 value, same hold/transition shape as before) — `x` just mirrors it
+  // in pixels, except mid-drag when the gesture takes over instead.
+  const screenIndexProgress = useTransform(
     scrollYProgress,
     [0, 0.12, 0.2, 0.32, 0.4, 0.52, 0.6, 1],
-    ['0%', '0%', '-100%', '-100%', '-200%', '-200%', '-300%', '-300%']
+    [0, 0, 1, 1, 2, 2, 3, 3]
   )
+  const basePxX = useTransform(screenIndexProgress, (i) => -i * trackWidth)
+  const x = useMotionValue(0)
+  useMotionValueEvent(basePxX, 'change', (v) => {
+    if (!draggingRef.current) x.set(v)
+  })
+  useEffect(() => {
+    if (!draggingRef.current) x.set(basePxX.get())
+  }, [trackWidth])
+
+  // On release, snap to the nearest screen and jump the actual page scroll
+  // to that screen's hold window — everything else here (dots, count-ups,
+  // sparklines) is already driven off scrollYProgress, so resyncing scroll
+  // is what keeps a swipe consistent with scrolling instead of a second,
+  // parallel source of truth.
+  function handleDragEnd() {
+    if (!trackWidth) {
+      draggingRef.current = false
+      return
+    }
+    const current = x.get()
+    const targetIndex = Math.min(SCREENS.length - 1, Math.max(0, Math.round(-current / trackWidth)))
+    animate(x, -targetIndex * trackWidth, { type: 'spring', bounce: 0.15, duration: 0.4 })
+
+    const { holdStart, holdEnd } = SCREENS[targetIndex]
+    const targetProgress = (holdStart + holdEnd) / 2
+    const sectionEl = sectionRef.current
+    if (sectionEl) {
+      const rect = sectionEl.getBoundingClientRect()
+      const sectionTop = rect.top + window.scrollY
+      const scrollableHeight = rect.height - window.innerHeight
+      window.scrollTo({ top: sectionTop + targetProgress * scrollableHeight, behavior: 'auto' })
+    }
+    draggingRef.current = false
+  }
 
   return (
     <section ref={sectionRef} className="relative h-[360vh] bg-[#0D0D0D]">
@@ -386,8 +452,19 @@ export default function MoneyOverview() {
           Complete view of your money, real time
         </h2>
 
-        <div className="relative mt-12 h-[520px] w-full max-w-sm overflow-hidden">
-          <motion.div className="flex h-full" style={{ x: trackX }}>
+        <div ref={trackRef} className="relative mt-12 h-[460px] w-full max-w-sm overflow-hidden md:h-[520px]">
+          <motion.div
+            className="flex h-full"
+            style={{ x }}
+            drag={isTouch && trackWidth > 0 ? 'x' : false}
+            dragConstraints={{ left: -(SCREENS.length - 1) * trackWidth, right: 0 }}
+            dragElastic={0.12}
+            dragMomentum={false}
+            onDragStart={() => {
+              draggingRef.current = true
+            }}
+            onDragEnd={handleDragEnd}
+          >
             {SCREENS.map(({ Component, holdStart, holdEnd }, i) => {
               // eslint-disable-next-line react-hooks/rules-of-hooks
               const screenProgress = useTransform(scrollYProgress, [holdStart, Math.min(holdStart + 0.08, holdEnd)], [0, 1])

@@ -111,23 +111,25 @@ export default function Nav({ textColor = '#1e1e1a', logoInvert = 1 }) {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.2 }}
-            className={`glass-border !fixed inset-x-6 top-[92px] z-30 flex flex-col overflow-hidden rounded-3xl bg-white/90 backdrop-blur-2xl lg:hidden ${outerShadow}`}
+            className={`glass-border !fixed inset-x-6 top-[92px] z-30 flex flex-col overflow-hidden rounded-3xl bg-white/35 backdrop-blur-2xl lg:hidden ${outerShadow}`}
           >
-            <Link
+            <MotionLink
               href="/about"
               onClick={() => setMenuOpen(false)}
-              className="px-6 py-4 text-center font-gsans text-base font-semibold text-[#1e1e1a] transition-colors hover:bg-black/5"
+              style={{ color: textColor }}
+              className="px-6 py-4 text-center font-gsans text-base font-semibold transition-colors hover:bg-white/20"
             >
               About us
-            </Link>
-            <div className="h-px bg-black/10" />
-            <Link
+            </MotionLink>
+            <div className="h-px bg-white/20" />
+            <MotionLink
               href="/contact"
               onClick={() => setMenuOpen(false)}
-              className="px-6 py-4 text-center font-gsans text-base font-semibold text-[#1e1e1a] transition-colors hover:bg-black/5"
+              style={{ color: textColor }}
+              className="px-6 py-4 text-center font-gsans text-base font-semibold transition-colors hover:bg-white/20"
             >
               Contact us
-            </Link>
+            </MotionLink>
           </motion.div>
         )}
       </AnimatePresence>

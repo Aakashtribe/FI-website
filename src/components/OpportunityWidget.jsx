@@ -22,12 +22,12 @@ export function WidgetShell({ title, subtitle, children, glass = false }) {
     <div
       className={
         glass
-          ? 'flex h-full flex-col rounded-2xl border border-white/10 bg-white/10 p-6 shadow-2xl shadow-black/50 backdrop-blur-2xl'
-          : 'flex h-full flex-col rounded-2xl border border-[#eaeae6] bg-white p-6 shadow-[0_12px_32px_-16px_rgba(0,0,0,0.12)]'
+          ? 'flex h-full flex-col overflow-hidden rounded-2xl border border-white/10 bg-white/10 p-6 shadow-2xl shadow-black/50 backdrop-blur-2xl'
+          : 'flex h-full flex-col overflow-hidden rounded-2xl border border-[#eaeae6] bg-white p-6 shadow-[0_12px_32px_-16px_rgba(0,0,0,0.12)]'
       }
     >
-      <p className={`font-gsans text-lg font-semibold ${glass ? 'text-white' : 'text-[#1e1e1a]'}`}>{title}</p>
-      <p className={`mt-0.5 font-gsans text-sm ${glass ? 'text-white/50' : 'text-[#858679]'}`}>{subtitle}</p>
+      <p className={`font-gsans text-sm font-semibold md:text-lg ${glass ? 'text-white' : 'text-[#1e1e1a]'}`}>{title}</p>
+      <p className={`mt-0.5 font-gsans text-xs md:text-sm ${glass ? 'text-white/50' : 'text-[#858679]'}`}>{subtitle}</p>
       <div className={`mt-4 border-t border-dashed ${glass ? 'border-white/15' : 'border-[#dcdcd8]'}`} />
       <div className="flex flex-1 flex-col">{children}</div>
     </div>
@@ -37,10 +37,10 @@ export function WidgetShell({ title, subtitle, children, glass = false }) {
 export function Callout({ label, amount, glass = false }) {
   return (
     <div
-      className={`mt-4 flex items-center justify-between rounded-xl px-4 py-3 ${glass ? 'bg-white/15' : 'bg-[#f7f7f6]'}`}
+      className={`mt-4 flex items-center justify-between gap-2 overflow-hidden rounded-xl px-4 py-3 ${glass ? 'bg-white/15' : 'bg-[#f7f7f6]'}`}
     >
-      <span className={`font-gsans text-sm ${glass ? 'text-white' : 'text-[#1e1e1a]'}`}>{label}</span>
-      <span className={`font-gsans text-lg font-semibold ${glass ? 'text-white' : 'text-[#1e1e1a]'}`}>{amount}</span>
+      <span className={`min-w-0 truncate font-gsans text-[10px] sm:text-xs md:text-sm ${glass ? 'text-white' : 'text-[#1e1e1a]'}`}>{label}</span>
+      <span className={`shrink-0 whitespace-nowrap font-gsans text-xs font-semibold sm:text-sm md:text-lg ${glass ? 'text-white' : 'text-[#1e1e1a]'}`}>{amount}</span>
     </div>
   )
 }
