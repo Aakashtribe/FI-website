@@ -4,7 +4,7 @@ import Footer from './Footer.jsx'
 export function LegalPage({ title, lastUpdated, children }) {
   return (
     <>
-      <section className="relative bg-white px-6 pt-32 pb-24 md:px-16">
+      <section className="relative bg-white px-6 pt-48 pb-24 md:px-16">
         <Nav textColor="#1e1e1a" />
         <div className="mx-auto max-w-3xl">
           <h1 className="text-[clamp(2rem,4.4vw,3.75rem)] font-semibold leading-[1.1] tracking-tight text-[#1e1e1a]">

@@ -50,11 +50,8 @@ export default function Nav({ textColor = '#1e1e1a', logoInvert = 1 }) {
       transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
       className="absolute top-0 left-0 right-0 z-20 grid grid-cols-3 items-center px-8 py-8 md:px-12"
     >
-      <MotionLink
-        href="/"
-        className={`glass-border flex h-12 items-center justify-center justify-self-start whitespace-nowrap rounded-full bg-white/35 px-4 backdrop-blur-2xl transition-colors hover:bg-white/45 md:h-16 md:px-6 ${outerShadow}`}
-      >
-        <motion.img src={tribeLogo} alt="tr/be" className="h-7 w-auto md:h-9" style={{ filter: logoFilter }} />
+      <MotionLink href="/" className="justify-self-start">
+        <motion.img src={tribeLogo} alt="tr/be" className="h-12 w-auto" style={{ filter: logoFilter }} />
       </MotionLink>
 
       <nav
@@ -83,7 +80,7 @@ export default function Nav({ textColor = '#1e1e1a', logoInvert = 1 }) {
         type="button"
         onClick={() => setMenuOpen((v) => !v)}
         aria-label={menuOpen ? 'Close menu' : 'Open menu'}
-        className={`glass-border flex h-12 w-12 items-center justify-center justify-self-center rounded-full bg-white/35 backdrop-blur-2xl transition-colors hover:bg-white/45 lg:hidden ${outerShadow}`}
+        className={`glass-border col-start-3 flex h-12 w-12 items-center justify-center justify-self-end rounded-full bg-white/35 backdrop-blur-2xl transition-colors hover:bg-white/45 lg:hidden ${outerShadow}`}
       >
         <MenuIcon open={menuOpen} color={textColor} />
       </button>
@@ -98,17 +95,23 @@ export default function Nav({ textColor = '#1e1e1a', logoInvert = 1 }) {
         Get the app
       </motion.a>
 
-      {/* Placed after every other grid child — col-span-3 makes this occupy
-          a full row, which would otherwise push whatever comes after it
-          (Get the app) down into a new row of its own. */}
+      {/* Fixed (not absolute) so its inset-x-6 matches the bottom "Get the
+          app" button's margins exactly — as a grid child, an absolutely
+          positioned panel here would resolve its width/position against
+          the grid's own content box (inside the header's px-8 padding),
+          landing 32px further in than a plain viewport-relative inset.
+          z-30 (above the header's own z-20) because Hero's headline sits
+          at that same z-20 — as a later-painted DOM sibling at an equal
+          z-index it would otherwise win over this panel regardless of the
+          header's stacking. */}
       <AnimatePresence>
         {menuOpen && (
           <motion.div
-            initial={{ opacity: 0, y: -8, x: '-50%' }}
-            animate={{ opacity: 1, y: 0, x: '-50%' }}
-            exit={{ opacity: 0, y: -8, x: '-50%' }}
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.2 }}
-            className={`glass-border absolute left-1/2 top-full col-span-3 mt-3 flex w-[calc(100%_-_4rem)] max-w-xs flex-col overflow-hidden rounded-3xl bg-white/90 backdrop-blur-2xl lg:hidden ${outerShadow}`}
+            className={`glass-border !fixed inset-x-6 top-[92px] z-30 flex flex-col overflow-hidden rounded-3xl bg-white/90 backdrop-blur-2xl lg:hidden ${outerShadow}`}
           >
             <Link
               href="/about"
@@ -125,18 +128,28 @@ export default function Nav({ textColor = '#1e1e1a', logoInvert = 1 }) {
             >
               Contact us
             </Link>
-            <div className="p-3">
-              <a
-                href={appStoreLink}
-                target="_blank"
-                rel="noreferrer"
-                onClick={() => setMenuOpen(false)}
-                className="flex items-center justify-center rounded-full bg-[#1e1e1a] py-3 font-gsans text-base font-semibold text-white transition-colors hover:bg-[#33322c]"
-              >
-                Get the app
-              </a>
-            </div>
           </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* "Get the app" pinned to the bottom of the screen while the menu is
+          open, rather than sitting inside the small links card — matches
+          the reference layout (nav links up top, app CTA anchored low). */}
+      <AnimatePresence>
+        {menuOpen && (
+          <motion.a
+            href={appStoreLink}
+            target="_blank"
+            rel="noreferrer"
+            onClick={() => setMenuOpen(false)}
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 8 }}
+            transition={{ duration: 0.2 }}
+            className="fixed inset-x-6 bottom-6 z-30 flex items-center justify-center rounded-full bg-[#1e1e1a] py-4 font-gsans text-base font-semibold text-white shadow-xl transition-colors hover:bg-[#33322c] lg:hidden"
+          >
+            Get the app
+          </motion.a>
         )}
       </AnimatePresence>
     </motion.header>
