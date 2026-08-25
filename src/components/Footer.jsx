@@ -15,7 +15,7 @@ const SOCIALS = [
 // Links without an `href` don't have a page yet, so they render as plain
 // (non-navigating) text rather than pointing somewhere broken.
 const COMPANY_LINKS = [{ label: 'About', href: '/about' }, { label: 'Contact', href: '/contact' }]
-const SUPPORT_LINKS = [{ label: 'Privacy' }, { label: 'Terms' }]
+const SUPPORT_LINKS = [{ label: 'Privacy', href: '/privacy' }, { label: 'Terms', href: '/terms' }]
 
 function FooterColumn({ title, items }) {
   return (

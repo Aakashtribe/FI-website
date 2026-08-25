@@ -58,7 +58,7 @@ export default function Nav({ textColor = '#1e1e1a', logoInvert = 1 }) {
       </MotionLink>
 
       <nav
-        className={`glass-border hidden items-center justify-self-center gap-1 rounded-full bg-white/35 p-0 backdrop-blur-2xl md:flex ${outerShadow}`}
+        className={`glass-border hidden items-center justify-self-center gap-1 rounded-full bg-white/35 p-0 backdrop-blur-2xl lg:flex ${outerShadow}`}
       >
         <MotionLink
           href="/about"
@@ -76,13 +76,14 @@ export default function Nav({ textColor = '#1e1e1a', logoInvert = 1 }) {
         </MotionLink>
       </nav>
 
-      {/* Below md there's no room for the pill nav, so a hamburger opens the
-          same two links in a dropdown instead of them just disappearing. */}
+      {/* Below lg there's no room for the pill nav (and its own "Get the
+          app" pill), so a hamburger opens both — plus its own "Get the
+          app" button — in a dropdown instead of them just disappearing. */}
       <button
         type="button"
         onClick={() => setMenuOpen((v) => !v)}
         aria-label={menuOpen ? 'Close menu' : 'Open menu'}
-        className={`glass-border flex h-12 w-12 items-center justify-center justify-self-center rounded-full bg-white/35 backdrop-blur-2xl transition-colors hover:bg-white/45 md:hidden ${outerShadow}`}
+        className={`glass-border flex h-12 w-12 items-center justify-center justify-self-center rounded-full bg-white/35 backdrop-blur-2xl transition-colors hover:bg-white/45 lg:hidden ${outerShadow}`}
       >
         <MenuIcon open={menuOpen} color={textColor} />
       </button>
@@ -92,7 +93,7 @@ export default function Nav({ textColor = '#1e1e1a', logoInvert = 1 }) {
         target="_blank"
         rel="noreferrer"
         style={{ color: textColor }}
-        className={`glass-border justify-self-end whitespace-nowrap rounded-full bg-white/35 px-4 py-3 font-gsans text-sm font-semibold leading-6 backdrop-blur-2xl transition-colors hover:bg-white/45 md:px-6 md:py-5 md:text-base ${outerShadow}`}
+        className={`glass-border hidden justify-self-end whitespace-nowrap rounded-full bg-white/35 px-4 py-3 font-gsans text-sm font-semibold leading-6 backdrop-blur-2xl transition-colors hover:bg-white/45 lg:inline-block lg:px-6 lg:py-5 lg:text-base ${outerShadow}`}
       >
         Get the app
       </motion.a>
@@ -107,7 +108,7 @@ export default function Nav({ textColor = '#1e1e1a', logoInvert = 1 }) {
             animate={{ opacity: 1, y: 0, x: '-50%' }}
             exit={{ opacity: 0, y: -8, x: '-50%' }}
             transition={{ duration: 0.2 }}
-            className={`glass-border absolute left-1/2 top-full col-span-3 mt-3 flex w-[calc(100%_-_4rem)] max-w-xs flex-col overflow-hidden rounded-3xl bg-white/90 backdrop-blur-2xl md:hidden ${outerShadow}`}
+            className={`glass-border absolute left-1/2 top-full col-span-3 mt-3 flex w-[calc(100%_-_4rem)] max-w-xs flex-col overflow-hidden rounded-3xl bg-white/90 backdrop-blur-2xl lg:hidden ${outerShadow}`}
           >
             <Link
               href="/about"
@@ -124,6 +125,17 @@ export default function Nav({ textColor = '#1e1e1a', logoInvert = 1 }) {
             >
               Contact us
             </Link>
+            <div className="p-3">
+              <a
+                href={appStoreLink}
+                target="_blank"
+                rel="noreferrer"
+                onClick={() => setMenuOpen(false)}
+                className="flex items-center justify-center rounded-full bg-[#1e1e1a] py-3 font-gsans text-base font-semibold text-white transition-colors hover:bg-[#33322c]"
+              >
+                Get the app
+              </a>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
