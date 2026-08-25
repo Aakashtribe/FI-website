@@ -5,8 +5,8 @@ import PhoneMockup from './PhoneMockup.jsx'
 
 // Must match the mockup box in PhoneMockup.jsx (w-[220px] md:w-[260px], same aspect ratio
 // as the source PNG, 2229x4527).
-const BASE_WIDTH_MOBILE = 220
-const BASE_WIDTH_DESKTOP = 260
+const BASE_WIDTH_MOBILE = 260
+const BASE_WIDTH_DESKTOP = 320
 const CONTAINER_ASPECT = 2229 / 4527
 // Fraction of the mockup box the phone's screen (not its bezel/frame) actually
 // occupies — the narrower of the screen box's width/height fill (measured in
@@ -15,6 +15,13 @@ const SCREEN_FILL_RATIO = 0.9264
 // Extra safety margin so the screen clears the viewport edge with room to spare
 // (otherwise viewport aspect ratios close to the phone's own can let the notch peek in).
 const COVER_BUFFER = 1.15
+
+// The hand-off to the shrunk white chat UI now begins on the very first
+// scroll input, rather than holding the huge blue intro first — it still
+// plays out over a slow, multi-scroll stretch (the same 0.4 width as
+// before) rather than snapping instantly.
+const TRANSITION_START = 0
+const TRANSITION_END = 0.4
 
 export default function Hero() {
   const sectionRef = useRef(null)
@@ -38,13 +45,6 @@ export default function Hero() {
     target: sectionRef,
     offset: ['start start', 'end end'],
   })
-
-  // The hand-off to the shrunk white chat UI now begins on the very first
-  // scroll input, rather than holding the huge blue intro first — it still
-  // plays out over a slow, multi-scroll stretch (the same 0.4 width as
-  // before) rather than snapping instantly.
-  const TRANSITION_START = 0
-  const TRANSITION_END = 0.4
 
   const bgOpacity = useTransform(scrollYProgress, [TRANSITION_START, TRANSITION_START + 0.1], [1, 0])
   const navTextColor = useTransform(scrollYProgress, [TRANSITION_START, TRANSITION_END], ['#ffffff', '#1e1e1a'])
@@ -79,7 +79,7 @@ export default function Hero() {
 
   return (
     <section ref={sectionRef} className="relative h-[160vh]">
-      <div className="sticky top-0 flex h-screen flex-col items-center justify-center overflow-hidden bg-white">
+      <div className="sticky top-0 flex h-screen flex-col items-center justify-center overflow-hidden bg-[#F2F1EC]">
         <motion.div
           style={{
             opacity: bgOpacity,
@@ -115,6 +115,7 @@ export default function Hero() {
               contentOpacity={chatContentOpacity}
               skyOpacity={skyOpacity}
               statusBarColor={statusBarColor}
+              widthClassName="w-[260px] md:w-[320px]"
             />
           </motion.div>
         </div>

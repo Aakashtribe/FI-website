@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useId, useRef, useState } from 'react'
 import { motion, useMotionValueEvent, useScroll, useTransform } from 'framer-motion'
 import arrowUpRightIcon from '../assets/icons/arrow-up-right.svg'
 import arrowDownRightIcon from '../assets/icons/arrow-down-right.svg'
@@ -34,7 +34,11 @@ const formatLakhs = (v) => `₹${(v / 100000).toFixed(1)}L`
 // from a fixed seed so it's identical on every render, not random per mount.
 // Drawn in white here instead of ink, to read against the dark glass.
 const SPARK_SHAPE = [0.42, 0.38, 0.5, 0.46, 0.58, 0.52, 0.64, 0.6, 0.72, 0.68, 0.8, 0.86, 1]
-function Sparkline() {
+// Draws in sync with the same scroll-driven `progress` that counts the
+// headline number up — the line grows left to right, the area fill reveals
+// with it, and the end dot rides the tip, rather than appearing finished.
+function Sparkline({ progress }) {
+  const clipId = useId()
   const w = 240
   const h = 64
   const points = SPARK_SHAPE.map((v, i) => {
@@ -44,43 +48,54 @@ function Sparkline() {
   })
   const linePoints = points.map(([x, y]) => `${x},${y}`).join(' ')
   const areaPoints = `0,${h} ${linePoints} ${w},${h}`
-  const [endX, endY] = points[points.length - 1]
+
+  // Same plain-state pattern as AnimatedAmount above — reading progress via
+  // useMotionValueEvent rather than deriving another MotionValue keeps this
+  // in sync with the count-up without a second layer of motion plumbing.
+  const [reveal, setReveal] = useState(0)
+  useMotionValueEvent(progress, 'change', (p) => setReveal(p))
+
+  const idxFloat = reveal * (points.length - 1)
+  const i0 = Math.floor(idxFloat)
+  const i1 = Math.min(i0 + 1, points.length - 1)
+  const t = idxFloat - i0
+  const [x0, y0] = points[i0]
+  const [x1, y1] = points[i1]
+  const dotX = x0 + (x1 - x0) * t
+  const dotY = y0 + (y1 - y0) * t
 
   return (
     <svg viewBox={`0 0 ${w} ${h}`} className="w-full" preserveAspectRatio="none">
-      <polygon points={areaPoints} fill="#ffffff" opacity="0.12" />
-      <polyline points={linePoints} fill="none" stroke="#ffffff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-      <circle cx={endX} cy={endY} r="4" fill="#ffffff" stroke="#000" strokeWidth="2" />
-    </svg>
-  )
-}
-
-function UpdatingBadge() {
-  return (
-    <span className="flex items-center gap-1.5 font-gsans text-xs text-white/50">
-      Updating..
-      <motion.span
-        className="h-1.5 w-1.5 rounded-full bg-white"
-        animate={{ opacity: [1, 0.3, 1] }}
-        transition={{ duration: 1.6, repeat: Infinity, ease: 'easeInOut' }}
+      <clipPath id={clipId}>
+        <rect x={0} y={0} width={reveal * w} height={h} />
+      </clipPath>
+      <polygon points={areaPoints} fill="#ffffff" opacity="0.12" clipPath={`url(#${clipId})`} />
+      <polyline
+        points={linePoints}
+        fill="none"
+        stroke="#ffffff"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        pathLength={1}
+        strokeDasharray={1}
+        strokeDashoffset={1 - reveal}
       />
-    </span>
+      <circle cx={dotX} cy={dotY} r="4" fill="#ffffff" stroke="#000" strokeWidth="2" />
+    </svg>
   )
 }
 
 function ScreenHeader({ icon, title, subtitle }) {
   return (
-    <div className="flex items-start justify-between">
-      <div className="flex items-center gap-3">
-        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-white/10">
-          <img src={icon} alt="" className="h-5 w-5 invert" />
-        </div>
-        <div>
-          <p className="font-gsans text-base font-semibold text-white">{title}</p>
-          <p className="font-gsans text-xs text-white/50">{subtitle}</p>
-        </div>
+    <div className="flex items-center gap-3">
+      <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-white/10">
+        <img src={icon} alt="" className="h-5 w-5 invert" />
       </div>
-      <UpdatingBadge />
+      <div>
+        <p className="font-gsans text-base font-semibold text-white">{title}</p>
+        <p className="font-gsans text-xs text-white/50">{subtitle}</p>
+      </div>
     </div>
   )
 }
@@ -109,7 +124,7 @@ function ScreenFooter({ text }) {
 // Dark frosted glass — a subtle white tint over black rather than the light-mode
 // glass's white tint over the pastel gradient, matching the Revolut-style look.
 const SCREEN_CARD_CLASS =
-  'flex h-full w-full flex-col rounded-2xl border border-white/10 bg-white/5 p-6 shadow-2xl shadow-black/50 backdrop-blur-xl'
+  'flex h-full w-full flex-col rounded-2xl border border-white/10 bg-white/10 p-6 shadow-2xl shadow-black/50 backdrop-blur-2xl'
 
 function IncomeScreen({ progress }) {
   return (
@@ -120,7 +135,7 @@ function IncomeScreen({ progress }) {
       </p>
       <p className="mt-1 font-gsans text-sm text-white">+12.4% vs last month</p>
       <div className="mt-4">
-        <Sparkline />
+        <Sparkline progress={progress} />
       </div>
       <div className="mt-2 divide-y divide-white/10">
         <BreakdownRow icon={briefcaseIcon} label="Salary" value="₹1,20,000" />
@@ -140,16 +155,28 @@ const EXPENSE_SEGMENTS = [
   { key: 'subscriptions', label: 'Subscriptions', pct: 6, shade: SHADE_4 },
 ]
 
-function ExpenseDonut() {
-  const size = 120
-  const stroke = 16
+function ExpenseDonut({ progress }) {
+  const size = 152
+  const stroke = 20
   const r = (size - stroke) / 2
   const c = size / 2
   const circumference = 2 * Math.PI * r
-  const gapDeg = 3
+  const gapDeg = 4
+
+  // Same reveal-by-progress pattern as AnimatedAmount/Sparkline — segments
+  // sweep in one after another (Needs, then Lifestyle, ...) as the ring
+  // fills, instead of appearing already complete.
+  const [reveal, setReveal] = useState(0)
+  useMotionValueEvent(progress, 'change', (p) => setReveal(p))
+
+  let cumPct = 0
   let angle = -90
   const arcs = EXPENSE_SEGMENTS.map(({ key, pct, shade }) => {
-    const sweep = (pct / 100) * 360 - gapDeg
+    const segStart = cumPct
+    cumPct += pct
+    const finalSweep = (pct / 100) * 360 - gapDeg
+    const segFraction = Math.min(Math.max((reveal * 100 - segStart) / pct, 0), 1)
+    const sweep = finalSweep * segFraction
     const dash = (sweep / 360) * circumference
     const arc = { key, shade, dasharray: `${dash} ${circumference - dash}`, rotate: angle }
     angle += (pct / 100) * 360
@@ -157,7 +184,7 @@ function ExpenseDonut() {
   })
 
   return (
-    <div className="relative h-[120px] w-[120px]">
+    <div className="relative h-[152px] w-[152px]">
       <svg viewBox={`0 0 ${size} ${size}`} className="h-full w-full">
         {arcs.map(({ key, shade, dasharray, rotate }) => (
           <circle
@@ -169,14 +196,14 @@ function ExpenseDonut() {
             stroke={shade}
             strokeWidth={stroke}
             strokeDasharray={dasharray}
-            strokeLinecap="round"
+            strokeLinecap="butt"
             transform={`rotate(${rotate} ${c} ${c})`}
           />
         ))}
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
-        <span className="font-gsans text-xs text-white/50">This</span>
-        <span className="font-gsans text-xs text-white/50">month</span>
+        <span className="font-gsans text-sm text-white/50">This</span>
+        <span className="font-gsans text-sm text-white/50">month</span>
       </div>
     </div>
   )
@@ -191,7 +218,7 @@ function ExpensesScreen({ progress }) {
       </p>
       <p className="mt-1 font-gsans text-sm text-white/50">-8% vs last month</p>
       <div className="mt-4 flex items-center gap-6">
-        <ExpenseDonut />
+        <ExpenseDonut progress={progress} />
         <div className="flex flex-col gap-2.5">
           {EXPENSE_SEGMENTS.map(({ key, label, pct, shade }) => (
             <div key={key} className="flex items-center gap-2">
@@ -218,7 +245,7 @@ function InvestmentsScreen({ progress }) {
         +₹1.8L (14.6%) <span className="text-white/50">Total returns</span>
       </p>
       <div className="mt-4">
-        <Sparkline />
+        <Sparkline progress={progress} />
       </div>
       <div className="mt-2 divide-y divide-white/10">
         <BreakdownRow icon={trendingUpIcon} label="Mutual Funds" value="₹6.2L" />
@@ -231,18 +258,46 @@ function InvestmentsScreen({ progress }) {
   )
 }
 
-function RepaidGauge({ pct }) {
-  const size = 120
-  const stroke = 12
+function RepaidGauge({ pct, progress }) {
+  const size = 152
+  const stroke = 20
   const r = (size - stroke) / 2
   const c = size / 2
   const circumference = 2 * Math.PI * r
-  const dash = (pct / 100) * circumference
+  const gapDeg = 4
+
+  // Ring sweeps up to pct in step with the same progress driving the
+  // outstanding-balance count-up, rather than appearing already filled —
+  // the displayed number counts up alongside it instead of sitting fixed.
+  const [reveal, setReveal] = useState(0)
+  useMotionValueEvent(progress, 'change', (p) => setReveal(p))
+
+  const revealFraction = Math.min(Math.max(reveal, 0), 1)
+  const currentPct = pct * revealFraction
+
+  // Treated as a 2-segment ring (active + remaining) with the same gapped
+  // arcs as ExpenseDonut, instead of one arc drawn flush over a full circle
+  // — keeps the two donuts visually consistent.
+  const activeSweep = ((pct / 100) * 360 - gapDeg) * revealFraction
+  const activeDash = (activeSweep / 360) * circumference
+  const remainingSweep = ((100 - pct) / 100) * 360 - gapDeg
+  const remainingDash = (remainingSweep / 360) * circumference
+  const remainingRotate = -90 + (pct / 100) * 360
 
   return (
-    <div className="relative h-[120px] w-[120px]">
+    <div className="relative h-[152px] w-[152px]">
       <svg viewBox={`0 0 ${size} ${size}`} className="h-full w-full">
-        <circle cx={c} cy={c} r={r} fill="none" stroke="rgba(255,255,255,0.15)" strokeWidth={stroke} />
+        <circle
+          cx={c}
+          cy={c}
+          r={r}
+          fill="none"
+          stroke="rgba(255,255,255,0.15)"
+          strokeWidth={stroke}
+          strokeDasharray={`${remainingDash} ${circumference - remainingDash}`}
+          strokeLinecap="butt"
+          transform={`rotate(${remainingRotate} ${c} ${c})`}
+        />
         <circle
           cx={c}
           cy={c}
@@ -250,14 +305,14 @@ function RepaidGauge({ pct }) {
           fill="none"
           stroke="#ffffff"
           strokeWidth={stroke}
-          strokeDasharray={`${dash} ${circumference - dash}`}
-          strokeLinecap="round"
+          strokeDasharray={`${activeDash} ${circumference - activeDash}`}
+          strokeLinecap="butt"
           transform={`rotate(-90 ${c} ${c})`}
         />
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
-        <span className="font-gsans text-2xl font-semibold text-white">{pct}%</span>
-        <span className="font-gsans text-xs text-white/50">repaid</span>
+        <span className="font-gsans text-2xl font-semibold text-white">{Math.round(currentPct)}%</span>
+        <span className="font-gsans text-sm text-white/50">Repaid</span>
       </div>
     </div>
   )
@@ -272,7 +327,7 @@ function LoansScreen({ progress }) {
       </p>
       <p className="mt-1 font-gsans text-sm text-white/50">Outstanding balance</p>
       <div className="mt-4 flex justify-center">
-        <RepaidGauge pct={32} />
+        <RepaidGauge pct={32} progress={progress} />
       </div>
       <div className="mt-4 flex items-center justify-between rounded-xl border border-white/10 px-4 py-3">
         <div>
@@ -318,7 +373,7 @@ export default function MoneyOverview() {
   )
 
   return (
-    <section ref={sectionRef} className="relative h-[450vh] bg-black">
+    <section ref={sectionRef} className="relative h-[360vh] bg-[#0D0D0D]">
       <div className="sticky top-0 flex h-screen flex-col items-center justify-center overflow-hidden px-6">
         {/* A single soft white glow behind the content — Revolut-style: plain
             black, not colorful blobs, just a little depth near the center. */}

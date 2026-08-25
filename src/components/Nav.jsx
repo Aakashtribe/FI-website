@@ -32,12 +32,15 @@ export default function Nav({ textColor = '#1e1e1a', logoInvert = 1 }) {
       transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
       className="absolute top-0 left-0 right-0 z-20 grid grid-cols-3 items-center px-8 py-8 md:px-12"
     >
-      <MotionLink to="/" className="justify-self-start">
-        <motion.img src={tribeLogo} alt="tr/be" className="h-12 w-auto" style={{ filter: logoFilter }} />
+      <MotionLink
+        to="/"
+        className={`glass-border justify-self-start whitespace-nowrap rounded-full bg-white/35 px-4 py-3 backdrop-blur-2xl transition-colors hover:bg-white/45 md:px-6 md:py-5 ${outerShadow}`}
+      >
+        <motion.img src={tribeLogo} alt="tr/be" className="h-5 w-auto md:h-6" style={{ filter: logoFilter }} />
       </MotionLink>
 
       <nav
-        className={`glass-border hidden items-center justify-self-center gap-1 rounded-full bg-white/20 p-0 backdrop-blur-xl md:flex ${outerShadow}`}
+        className={`glass-border hidden items-center justify-self-center gap-1 rounded-full bg-white/35 p-0 backdrop-blur-2xl md:flex ${outerShadow}`}
       >
         <MotionLink
           to="/about"
@@ -58,7 +61,7 @@ export default function Nav({ textColor = '#1e1e1a', logoInvert = 1 }) {
       <motion.a
         href="#app"
         style={{ color: textColor }}
-        className={`glass-border justify-self-end whitespace-nowrap rounded-full bg-white/20 px-4 py-3 font-gsans text-sm font-semibold leading-6 backdrop-blur-xl transition-colors hover:bg-white/30 md:px-6 md:py-5 md:text-base ${outerShadow}`}
+        className={`glass-border justify-self-end whitespace-nowrap rounded-full bg-white/35 px-4 py-3 font-gsans text-sm font-semibold leading-6 backdrop-blur-2xl transition-colors hover:bg-white/45 md:px-6 md:py-5 md:text-base ${outerShadow}`}
       >
         Get the app
       </motion.a>

@@ -1,9 +1,9 @@
-import ScrollRevealSection from './ScrollRevealSection.jsx'
+import CardCarousel from './CardCarousel.jsx'
 import { Callout, WidgetShell } from './OpportunityWidget.jsx'
 
 function CashInSavingsCard() {
   return (
-    <WidgetShell breadcrumb="Opportunity · Funds · Cash" title="Cash lying in savings account" subtitle="₹8.4L idle for 4 months">
+    <WidgetShell title="Cash lying in savings account" subtitle="₹8.4L idle for 4 months">
       <p className="mt-4 font-gsans text-sm text-[#1e1e1a]">
         Currently earning 3.5%. A one-year FD pays up to 7.5%.
       </p>
@@ -28,7 +28,7 @@ function CashInSavingsCard() {
 
 function TaxHarvestingCard() {
   return (
-    <WidgetShell breadcrumb="Opportunity · Funds · Tax" title="Tax harvesting" subtitle="Expires 31 March">
+    <WidgetShell title="Tax harvesting" subtitle="Expires 31 March">
       <p className="mt-4 font-gsans text-sm text-[#1e1e1a]">
         You get ₹1.25L of tax-free gains each year, and you can also book losses to minimise tax.
       </p>
@@ -49,7 +49,7 @@ function TaxHarvestingCard() {
 
 function NewCardCard() {
   return (
-    <WidgetShell breadcrumb="Opportunity · Cards" title="Get a card that fits your spending" subtitle="Matched to your balance & goals">
+    <WidgetShell title="Get a card that fits your spending" subtitle="Matched to your balance & goals">
       <p className="mt-4 font-gsans text-sm text-[#1e1e1a]">
         Your card doesn't reward your top spending categories. A better-matched card unlocks more value from the same spend.
       </p>
@@ -72,15 +72,11 @@ function NewCardCard() {
   )
 }
 
-const CARDS = [
-  { Component: CashInSavingsCard, revealStart: 0.06, revealEnd: 0.16 },
-  { Component: TaxHarvestingCard, revealStart: 0.32, revealEnd: 0.42 },
-  { Component: NewCardCard, revealStart: 0.58, revealEnd: 0.68 },
-]
+const CARDS = [{ Component: CashInSavingsCard }, { Component: TaxHarvestingCard }, { Component: NewCardCard }]
 
 export default function FindMoney() {
   return (
-    <ScrollRevealSection
+    <CardCarousel
       heading="Find money left on the table, under the bed or in hidden fees"
       cards={CARDS}
       sectionClassName="bg-white"

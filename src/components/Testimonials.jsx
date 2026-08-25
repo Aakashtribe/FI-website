@@ -36,7 +36,7 @@ function wrap(min, max, value) {
 
 function TestimonialCard({ name, quote }) {
   return (
-    <div className="flex h-full w-80 shrink-0 flex-col rounded-2xl border border-white/60 bg-white/40 p-6 shadow-xl shadow-black/5 backdrop-blur-xl">
+    <div className="flex h-full w-80 shrink-0 flex-col rounded-2xl border border-white/70 bg-white/60 p-6 shadow-xl shadow-black/5 backdrop-blur-2xl">
       <div className="flex items-center gap-3">
         <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#eaeae6]">
           <img src={userIcon} alt="" className="h-5 w-5" />
