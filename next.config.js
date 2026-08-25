@@ -1,14 +1,17 @@
-// GitHub Pages serves this as a project site at /FI-website/, but the local
-// dev server should still run at the root — same split vite.config.js used
-// to do with `command === 'build'`.
-const isProd = process.env.NODE_ENV === 'production'
+// GitHub Pages serves this as a project site at /FI-website/, so only that
+// build needs the subpath — every other target (local dev, and the
+// tribe-customer-website deploy, which serves from the domain root) must
+// not get it. NODE_ENV==='production' is true for BOTH of those non-GitHub
+// builds too, so it can't be the signal; GITHUB_PAGES is set explicitly by
+// .github/workflows/deploy.yml instead.
+const isGithubPages = process.env.GITHUB_PAGES === 'true'
 const repoBasePath = '/FI-website'
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: 'export',
-  basePath: isProd ? repoBasePath : '',
-  assetPrefix: isProd ? repoBasePath : '',
+  basePath: isGithubPages ? repoBasePath : '',
+  assetPrefix: isGithubPages ? repoBasePath : '',
   images: {
     unoptimized: true,
     // Every component imports images/icons and passes the import straight to
